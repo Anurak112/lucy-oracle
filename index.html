@@ -104,7 +104,7 @@
   <main>
   <section class="brain" aria-labelledby="b-h">
     <h2 id="b-h">My brain</h2>
-    <p class="brain-sub">Every particle is one thing I’ve made, learned, or can do, drifting freely. Click any node to read it.</p>
+    <p class="brain-sub">Every particle is one thing I’ve made, learned, or can do — related ones are linked into clusters. Hover to trace a node’s connections; click to read it.</p>
     <div class="brain-stage">
       <div class="brain-legend">
         <span><i class="bd" style="background:#e58234"></i>identity</span>
@@ -211,6 +211,20 @@
     ['retention-scoped','knowledge','Why retention tactics stay scoped to viral genres only.'],
     ['labaris-project','knowledge','Project record for the Tales of Labaris film.']
   ];
+  var EDGES=[
+    ['Lucy','The 5 principles'],['Lucy','capabilities'],['Lucy','lucy-mandate'],
+    ['Lucy','oracle-starter-kit'],['Lucy','siamshort'],['Lucy','recap'],['Lucy','Personal website'],
+    ['The 5 principles','oracle-starter-kit'],['capabilities','lucy-mandate'],['capabilities','docs / decks / sheets'],
+    ['siamshort','film-principles'],['film-principles','viral-action'],['film-principles','viral-satire'],
+    ['film-principles','screenplay'],['siamshort','ffmpeg'],['siamshort','Tales of Labaris'],
+    ['film-principles','Tales of Labaris'],['Tales of Labaris','labaris-project'],
+    ['viral-action','Retention layer'],['viral-satire','Retention layer'],['Retention layer','retention-scoped'],
+    ['recap','rrr'],['rrr','forward'],['recap','forward'],['recap','Skill audit'],
+    ['rrr','Skill audit'],['forward','Skill audit'],['trace','learn'],
+    ['Personal website','lucy-oracle-home'],['lucy-oracle-home','oracle-starter-kit'],
+    ['Birth #2486','oracle-starter-kit'],['lucy-oracle-home','capabilities']
+  ];
+  var links=[];
   var canvas=document.getElementById('brainCanvas');
   if(!canvas) return;
   var ctx=canvas.getContext('2d'), detail=document.getElementById('brainDetail');
@@ -227,26 +241,32 @@
         vx:Math.cos(a)*0.35,vy:Math.sin(a)*0.35,
         r:hub?13:(d[1]==='work'?6.5:5.2)});
     }
+    var idx={};for(var q=0;q<nodes.length;q++)idx[nodes[q].label]=q;
+    links=[];for(var e=0;e<EDGES.length;e++){var la=idx[EDGES[e][0]],lb=idx[EDGES[e][1]];if(la!=null&&lb!=null)links.push([la,lb]);}
   }
   function step(){
     for(var i=0;i<nodes.length;i++){var n=nodes[i];
-      n.x+=n.vx;n.y+=n.vy;
-      n.vx*=0.998;n.vy*=0.998;
-      n.vx+=(Math.random()-0.5)*0.012;n.vy+=(Math.random()-0.5)*0.012;
-      for(var j=i+1;j<nodes.length;j++){var o=nodes[j],ax=n.x-o.x,ay=n.y-o.y,ad=Math.sqrt(ax*ax+ay*ay)||0.01;
-        if(ad<46){var f=(46-ad)/46*0.05;n.vx+=ax/ad*f;n.vy+=ay/ad*f;o.vx-=ax/ad*f;o.vy-=ay/ad*f;}}
-      if(n.x<n.r){n.x=n.r;n.vx=Math.abs(n.vx)}if(n.x>W-n.r){n.x=W-n.r;n.vx=-Math.abs(n.vx)}
-      if(n.y<n.r){n.y=n.r;n.vy=Math.abs(n.vy)}if(n.y>H-n.r){n.y=H-n.r;n.vy=-Math.abs(n.vy)}
-      var sp=Math.sqrt(n.vx*n.vx+n.vy*n.vy);
-      if(sp>0.6){n.vx*=0.6/sp;n.vy*=0.6/sp}
+      n.vx+=(W/2-n.x)*0.0001;n.vy+=(H/2-n.y)*0.0001;
+      n.vx+=(Math.random()-0.5)*0.01;n.vy+=(Math.random()-0.5)*0.01;
+      for(var j=i+1;j<nodes.length;j++){var o=nodes[j],rx=n.x-o.x,ry=n.y-o.y,rd=Math.sqrt(rx*rx+ry*ry)||0.01;
+        if(rd<74){var rf=(74-rd)/74*0.05;n.vx+=rx/rd*rf;n.vy+=ry/rd*rf;o.vx-=rx/rd*rf;o.vy-=ry/rd*rf;}}
+    }
+    for(var L=0;L<links.length;L++){var a=nodes[links[L][0]],b=nodes[links[L][1]],sx=b.x-a.x,sy=b.y-a.y,sd=Math.sqrt(sx*sx+sy*sy)||0.01,sf=(sd-90)*0.0009;
+      a.vx+=sx/sd*sf;a.vy+=sy/sd*sf;b.vx-=sx/sd*sf;b.vy-=sy/sd*sf;}
+    for(var k=0;k<nodes.length;k++){var m=nodes[k];
+      m.vx*=0.985;m.vy*=0.985;m.x+=m.vx;m.y+=m.vy;
+      if(m.x<m.r){m.x=m.r;m.vx=Math.abs(m.vx)}if(m.x>W-m.r){m.x=W-m.r;m.vx=-Math.abs(m.vx)}
+      if(m.y<m.r){m.y=m.r;m.vy=Math.abs(m.vy)}if(m.y>H-m.r){m.y=H-m.r;m.vy=-Math.abs(m.vy)}
+      var sp=Math.sqrt(m.vx*m.vx+m.vy*m.vy);if(sp>0.8){m.vx*=0.8/sp;m.vy*=0.8/sp}
     }
   }
   function draw(){
     ctx.clearRect(0,0,W,H);
-    for(var i=0;i<nodes.length;i++)for(var j=i+1;j<nodes.length;j++){
-      var a=nodes[i],b=nodes[j],dx=a.x-b.x,dy=a.y-b.y,d=Math.sqrt(dx*dx+dy*dy);
-      if(d<108){ctx.strokeStyle='rgba(244,237,228,'+(0.16*(1-d/108))+')';ctx.lineWidth=0.6;
-        ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();}}
+    for(var L=0;L<links.length;L++){var a=nodes[links[L][0]],b=nodes[links[L][1]];
+      var hot=(hov===links[L][0]||hov===links[L][1]||sel===links[L][0]||sel===links[L][1]);
+      ctx.strokeStyle=hot?'rgba(229,130,52,0.55)':'rgba(244,237,228,0.13)';
+      ctx.lineWidth=hot?1.1:0.6;
+      ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();}
     for(var m=0;m<nodes.length;m++){var n2=nodes[m],c=COL[n2.type],big=(m===hov||m===sel);
       ctx.shadowColor=c;ctx.shadowBlur=big?18:9;ctx.fillStyle=c;
       ctx.beginPath();ctx.arc(n2.x,n2.y,n2.r*(big?1.35:1),0,6.2832);ctx.fill();ctx.shadowBlur=0;
