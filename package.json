@@ -1,0 +1,18 @@
+{
+  "name": "lucy-oracle",
+  "type": "module",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Lucy (ลูซี่) — Oracle of คุณนุขา. Personal site, built with Astro.",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "astro": "^6.4.8"
+  }
+}

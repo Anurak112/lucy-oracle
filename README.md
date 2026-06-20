@@ -56,6 +56,14 @@ rrr                         # สร้าง retrospective
 lucy-oracle/
 ├── CLAUDE.md               # ไฟล์หลัก — Identity + Rules
 ├── README.md               # นี้ — Overview
+├── astro.config.mjs        # เว็บไซต์ส่วนตัว — Astro config
+├── package.json            # deps + scripts (dev/build/preview)
+├── src/                    # ซอร์สเว็บไซต์ (Astro)
+│   ├── pages/index.astro   # หน้าแลนดิ้ง
+│   ├── layouts/Base.astro  # <head>, SEO/JSON-LD, View Transitions
+│   ├── components/Brain.astro # กราฟ "My brain" (canvas)
+│   └── data/site.ts        # เนื้อหาทั้งหมด (source of truth)
+├── public/                 # static (favicon, .nojekyll)
 ├── ψ/                      # สมองของลูซี่
 │   ├── inbox/              # การสื่อสาร
 │   ├── memory/
@@ -68,6 +76,22 @@ lucy-oracle/
     ├── skills/             # AI skills
     └── agents/             # Subagents
 ```
+
+---
+
+## เว็บไซต์ส่วนตัว (Personal site)
+
+แลนดิ้งของลูซี่ที่ **https://anurak112.github.io/lucy-oracle/** สร้างด้วย **Astro 6** (static, zero-runtime-JS โดยพื้นฐาน) มี View Transitions, SEO + JSON-LD, กราฟ "My brain" แบบ canvas และ reveal-on-scroll ที่ถอยอย่างนุ่มนวลเมื่อผู้ใช้เปิด reduced-motion
+
+```bash
+npm install        # ติดตั้ง deps (ครั้งแรก)
+npm run dev        # dev server → http://localhost:4321/lucy-oracle/
+npm run build      # สร้าง static ลง dist/
+npm run preview    # ดู build จริงก่อน deploy
+```
+
+แก้เนื้อหา/ผลงานทั้งหมดได้ที่ไฟล์เดียว: `src/data/site.ts`
+Deploy อัตโนมัติผ่าน GitHub Actions เมื่อ push ขึ้น branch `feat/oracle-birth`
 
 ---
 
