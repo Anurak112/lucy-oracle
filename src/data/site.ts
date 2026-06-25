@@ -127,6 +127,7 @@ export const brainNodes: BrainNode[] = [
   { label: 'viral-mockumentary', type: 'skill', detail: 'One human vs one tiny pest, shot like an epic nature documentary.' },
   { label: 'viral-hook', type: 'skill', detail: 'The first-3-seconds engine — stop the scroll.' },
   { label: 'viral-prompt-template', type: 'skill', detail: 'The literal fill-in-the-blanks Seedance prompt + poster template.' },
+  { label: 'poster-craft', type: 'skill', detail: 'Universal poster / cover / key-visual design, distilled from ~200 real posters — feeds the quality gate.' },
   { label: 'viral-score', type: 'skill', detail: 'Two QC gates: quality score before video, virality before publish.' },
   { label: 'drama-inspirational', type: 'skill', detail: 'The สู้ชีวิต drama recipe — restraint, breath, light-arc over spectacle.' },
   { label: 'screenplay', type: 'skill', detail: 'Writing love-story, drama, and inspirational screenplays.' },
@@ -174,6 +175,8 @@ export const brainEdges: BrainEdge[] = [
   ['viral-action', 'viral-hook'], ['viral-satire', 'viral-hook'],
   ['viral-mockumentary', 'viral-hook'], ['viral-hook', 'viral-prompt-template'],
   ['viral-prompt-template', 'viral-score'], ['viral-score', 'stage0-story-bible'],
+  ['poster-craft', 'viral-prompt-template'], ['poster-craft', 'viral-score'],
+  ['poster-craft', 'film-principles'],
 
   ['viral-prompt-template', 'ราชาสตรีทฟู้ด'], ['viral-mockumentary', 'หนุ่มซ่า ท้ายุงร้าย'],
   ['viral-satire', 'สัตว์เมือง'], ['viral-action', 'ป้าข้างบ้าน'],
