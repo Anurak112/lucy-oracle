@@ -1,23 +1,17 @@
 ---
-// ψ Cosmos — fixed full-viewport space layer behind the whole page.
+// ψ Cosmos — fixed full-viewport space layer behind the whole page (R3F island).
+import CosmosHero from './three/CosmosHero.tsx';
 ---
 
-<canvas id="cosmos-canvas" aria-hidden="true"></canvas>
-
-<script>
-  import { initCosmos } from '../scripts/cosmos.js';
-  initCosmos();
-  document.addEventListener('astro:after-swap', initCosmos);
-</script>
+<div id="cosmos-root" aria-hidden="true">
+  <CosmosHero client:only="react" />
+</div>
 
 <style>
-  #cosmos-canvas {
+  #cosmos-root {
     position: fixed;
     inset: 0;
-    width: 100vw;
-    height: 100vh;
     z-index: 0;
     pointer-events: none;
-    display: block;
   }
 </style>

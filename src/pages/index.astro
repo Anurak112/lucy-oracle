@@ -8,15 +8,15 @@ import { counts } from '../data/brain';
 <Base>
   <div class="wrap">
     <header class="hero">
-      <p class="eyebrow mono"><span class="rec" aria-hidden="true"></span> ψ ORACLE · BORN 15.06.2026 · SOUL BREWS STUDIO</p>
-      <h1>
+      <p class="eyebrow mono" data-hero><span class="rec" aria-hidden="true"></span> ψ ORACLE · BORN 15.06.2026 · SOUL BREWS STUDIO</p>
+      <h1 data-hero>
         <span class="l1">{meta.name}</span>
         <span class="l2">สมองทั้งดวง กางเป็นแผนที่ดาว</span>
       </h1>
-      <p class="role">{meta.role}</p>
-      <p class="tagline">{meta.tagline}</p>
+      <p class="role" data-hero>{meta.role}</p>
+      <p class="tagline" data-hero>{meta.tagline}</p>
 
-      <div class="statchips" role="list">
+      <div class="statchips" role="list" data-hero>
         <span class="statchip" role="listitem"><b>{counts.films}</b> โปรเจกต์หนัง</span>
         <span class="statchip" role="listitem"><b>{counts.skills}</b> สกิล</span>
         <span class="statchip" role="listitem"><b>{counts.knowledge}</b> บทเรียน</span>
@@ -24,7 +24,7 @@ import { counts } from '../data/brain';
         <span class="statchip hot" role="listitem"><b>99★</b> Gate-1 high-water</span>
       </div>
 
-      <div class="hero-rule" aria-hidden="true"><span class="mono">Lucy Oracle · Living Star-Map</span></div>
+      <div class="hero-rule" aria-hidden="true" data-hero><span class="mono">Lucy Oracle · Living Star-Map</span></div>
     </header>
 
     <main>
@@ -177,6 +177,10 @@ import { counts } from '../data/brain';
 </Base>
 
 <script>
+  import { initMotion } from '../scripts/motion.js';
+  initMotion();
+  document.addEventListener('astro:after-swap', initMotion);
+
   // Reveal sections as they scroll into view.
   function wireReveal() {
     const els = document.querySelectorAll<HTMLElement>('.reveal');
@@ -353,28 +357,11 @@ import { counts } from '../data/brain';
     border-radius: 16px;
     padding: 26px 18px 16px;
   }
+  /* staircase draw + fades are driven by GSAP DrawSVG scrub (see scripts/motion.js) */
   @media (prefers-reduced-motion: no-preference) {
-    .ratchet :global(.stair) {
-      stroke-dasharray: 1000;
-      stroke-dashoffset: 1000;
-    }
-    .reveal.in .ratchet :global(.stair) {
-      animation: stairdraw 2.2s cubic-bezier(0.6, 0, 0.3, 1) 0.25s forwards;
-    }
-    .ratchet :global(circle),
-    .ratchet :global(text) {
+    .hero :global([data-hero]) {
       opacity: 0;
     }
-    .reveal.in .ratchet :global(circle),
-    .reveal.in .ratchet :global(text) {
-      animation: stairfade 0.7s ease 1.35s forwards;
-    }
-  }
-  @keyframes stairdraw {
-    to { stroke-dashoffset: 0; }
-  }
-  @keyframes stairfade {
-    to { opacity: 1; }
   }
   .ratchet svg {
     width: 100%;
