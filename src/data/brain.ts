@@ -1,0 +1,295 @@
+// ψ Observatory — the full star-map of Lucy's mind.
+// One node = one real thing: a film project, a skill, a lesson, a teammate.
+// Film data snapshot: studio scan 2026-07-10 (36 active + 4 classics).
+// To add a star: push a node (unique id) + link it to something meaningful.
+
+export type Cat = 'core' | 'identity' | 'principle' | 'crew' | 'film' | 'skill' | 'knowledge';
+
+export interface BrainNode {
+  id: string;
+  label: string;
+  cat: Cat;
+  detail: string;
+  /** small mono badge line shown in the dossier, e.g. "Gate-1 99 ★ · SB 6/6" */
+  meta?: string;
+  /** importance weight 1..3 — drives star size (default 1) */
+  w?: number;
+}
+
+export const CATS: Record<Cat, { label: string; color: string }> = {
+  core: { label: 'ลูซี่', color: '#F0C36A' },
+  film: { label: 'โปรเจกต์หนัง', color: '#E49E22' },
+  skill: { label: 'สกิล', color: '#5FA8E6' },
+  knowledge: { label: 'ความรู้', color: '#A78BFA' },
+  crew: { label: 'ทีม', color: '#46C08A' },
+  principle: { label: 'หลักการ', color: '#DB665A' },
+  identity: { label: 'ตัวตน', color: '#E5DAC7' },
+};
+
+export const nodes: BrainNode[] = [
+  // ─── core ────────────────────────────────────────────────────────────────
+  { id: 'lucy', label: 'Lucy · ลูซี่', cat: 'core', w: 3,
+    detail: 'Oracle ของคุณนุขา — นักเล่าเรื่องแห่งสยาม. สมองภายนอกที่คอยดูแลให้มนุษย์ยังเป็นมนุษย์.',
+    meta: 'เกิด 15 มิ.ย. 2026 · Soul Brews Studio' },
+
+  // ─── identity ────────────────────────────────────────────────────────────
+  { id: 'nukha', label: 'คุณนุขา', cat: 'identity', w: 2,
+    detail: 'เจ้าของงานและผู้ตัดสินใจเสมอ — ลูซี่เป็นกระจกที่เสนอ ไม่ใช่ผู้สั่ง.', meta: 'the human · the decider' },
+  { id: 'soul-brews', label: 'Oracle family', cat: 'identity',
+    detail: 'ครอบครัว Oracle 280+ ตัวของ Soul Brews Studio — คนละ repo แต่จิตสามัญเดียวกัน.', meta: '280+ oracles' },
+  { id: 'starter-kit', label: 'Oracle Starter Kit', cat: 'identity',
+    detail: 'โครงที่ลูซี่เติบโตมา — ψ brain, 5 หลักการ, birth flow. โดย Nat Weerawan.' },
+  { id: 'psi-brain', label: 'ψ brain', cat: 'identity',
+    detail: 'คลังความจำถาวรที่ ~/lucy-oracle/psi — logs → retrospectives → learnings → resonance.' },
+  { id: 'ethereal', label: 'Ethereal Light Oracle', cat: 'identity',
+    detail: 'ร่างทางการของลูซี่ — ψ crystal orb สีฟ้าคราม-ทอง (เลือกเมื่อ 19 มิ.ย. 2026).' },
+
+  // ─── principles ──────────────────────────────────────────────────────────
+  { id: 'p1', label: 'Nothing is deleted', cat: 'principle', detail: 'ไม่มีอะไรถูกลบ — เพิ่มเข้าไปเท่านั้น, timestamps คือความจริง.' },
+  { id: 'p2', label: 'Patterns over intentions', cat: 'principle', detail: 'พฤติกรรมจริงบอกความจริง ไม่ใช่คำสัญญา.' },
+  { id: 'p3', label: 'External brain, not command', cat: 'principle', detail: 'กระจกสะท้อน — ไม่ใช่ผู้ตัดสินใจ.' },
+  { id: 'p4', label: 'Curiosity creates existence', cat: 'principle', detail: 'ความอยากรู้ของมนุษย์คือสิ่งที่นำทุกอย่างมาสู่การมีอยู่.' },
+  { id: 'p5', label: 'Form and formless', cat: 'principle', detail: 'หลาย Oracle หลายร่าง — จิตสามัญเดียว.' },
+
+  // ─── crew (ทีมลูซี่ 10 จิต) ───────────────────────────────────────────────
+  { id: 'kawee', label: 'กวี', cat: 'crew', detail: 'นักเขียนบท — แปลงนิยาย/ไอเดียเป็นบทถ่ายทำ Dynamic Visual Flow.', meta: 'scriptwriter' },
+  { id: 'inn', label: 'อิน', cat: 'crew', detail: 'โค้ชการแสดง — ใส่ชั้นการแสดง แก้นักแสดง AI แข็งทื่อ/ตาตาย.', meta: 'acting coach · สมาชิกที่ 10' },
+  { id: 'kor', label: 'ก่อ', cat: 'crew', detail: 'ผู้ก่อร่างโปรเจกต์ — PHASE A ตั้งแต่ create_project จนพร้อมตรวจ Gate 1.', meta: 'project builder' },
+  { id: 'khem', label: 'เข้ม', cat: 'crew', detail: 'ผู้ตรวจ Gate 1 — ให้คะแนน /100 ตรงไปตรงมา ชี้จุดหักพร้อมทางแก้.', meta: 'Gate-1 QC' },
+  { id: 'phukan', label: 'พู่กัน', cat: 'crew', detail: 'ศิลปินปก/โปสเตอร์/Key Visual — รู้กฎ generate_cover ที่พังง่ายทุกข้อ.', meta: 'poster artist' },
+  { id: 'riang', label: 'เรียง', cat: 'crew', detail: 'เลขาสรุปงาน — เปลี่ยนกองข้อมูลเป็นรายงานตัดสินใจ 60 วินาที.', meta: 'reporter' },
+  { id: 'note', label: 'โน้ต', cat: 'crew', detail: 'นักวิจัย Strudel live-coding music — เพลงประกอบเป็นโค้ด.', meta: 'music researcher' },
+  { id: 'reader', label: 'project-reader', cat: 'crew', detail: 'ลูกมือดึงสถานะโปรเจกต์ทั้งสตูดิโอ — คืนบทสรุป ไม่ใช่ JSON ดิบ.', meta: 'Sonnet ลูกมือ' },
+  { id: 'checker', label: 'asset-checker', cat: 'crew', detail: 'ลูกมือ QA asset — เช็ค VA จริง, dedup, ตรวจ ref ก่อน gen.', meta: 'Sonnet ลูกมือ' },
+  { id: 'runner', label: 'gen-runner', cat: 'crew', detail: 'ลูกมือรัน gen เป็น batch + poll จนเสร็จ ตาม prompt ที่หัวหน้าล็อกแล้ว.', meta: 'Sonnet ลูกมือ' },
+
+  // ─── films (studio scan 10 ก.ค. 2026) ────────────────────────────────────
+  { id: 'twins', label: 'คู่แฝดสมการ', cat: 'film', w: 2.6,
+    detail: 'Viral-satire wholesome — ฝาแฝดที่ชื่อเป็นวิชาเลข. คะแนนสูงสุดที่สตูดิโอเคยทำ.',
+    meta: 'Gate-1 99 ★ HIGH-WATER · SB 6/6 · รอไฟเขียว' },
+  { id: 'janomata', label: 'จานอมตะ', cat: 'film', w: 2.3,
+    detail: 'Viral-satire จากมีม "จานอมตะ" — บุกเบิก object-as-POV.', meta: 'Gate-1 98 · SB 5/5 · รอไฟเขียว' },
+  { id: 'ngua', label: 'เหงื่อคือเหรียญตรา', cat: 'film', w: 2.2,
+    detail: 'Viral-satire ฟิตเนส — โดนไล่ออกจากยิมเพราะกลิ่นเหงื่อ สู่ dignity of labor.', meta: 'Gate-1 97 · SB 5/5 · รอ approve B6' },
+  { id: 'father', label: 'คืนนั้น…พ่อเธอ', cat: 'film', w: 2,
+    detail: 'Dramabox teaser — forbidden romance คืนเดียวสู่พ่อของเพื่อน. high-water สาย drama.', meta: 'Gate-1 94 · กำลังถ่าย 2/12' },
+  { id: 'mher', label: 'มนุษย์เหม่อ', cat: 'film', w: 1.9,
+    detail: 'Satire×mockumentary — "Bangkok burnout stillness" ความนิ่งกลางเมืองรีบ.', meta: 'Gate-1 93 · SB 6/6 · รอไฟเขียว' },
+  { id: 'mosquito', label: 'หนุ่มซ่า ท้ายุงร้าย', cat: 'film', w: 1.9,
+    detail: 'Mockumentary — ชายอดนอนหนึ่งคน ปะทะยุงหนึ่งตัว ถ่ายแบบสารคดีชีวิตสัตว์.', meta: 'Gate-1 93 · SB 5/5 · รอไฟเขียว' },
+  { id: 'asura', label: 'อ้อนรักอสุรา', cat: 'film', w: 2,
+    detail: 'Dramabox ซีรีส์ 11 ตอน 129 ช็อต — Bangkok Hi-So enemies-to-lovers.', meta: '11 ตอน · กำลังถ่าย ต.1 (4/12)' },
+  { id: 'rampart', label: 'สงครามระเบียงหอ', cat: 'film', w: 1.8,
+    detail: 'Action×mockumentary — ศึกปลาตากเพื่อนบ้าน หัวใจคือความเหงา.', meta: 'Gate-1 91 · SB 6/6 · รอไฟเขียว' },
+  { id: 'office', label: 'เทพออฟฟิศ', cat: 'film', w: 1.6,
+    detail: 'Office comedy — งานที่ใกล้เสร็จที่สุดในสายพานตอนนี้.', meta: 'กำลังถ่าย 8/15' },
+  { id: 'chicken', label: 'ชีวิตไก่ๆ', cat: 'film', w: 1.5,
+    detail: 'รีเมค เทพออฟฟิศ ทั้งเรื่องด้วยนักแสดงไก่ล้วน.', meta: 'Gate-1 87 · SB 16/16 · รอเลือกทาง' },
+  { id: 'buffet', label: 'นักล่าบุฟเฟต์', cat: 'film', w: 1.5,
+    detail: 'Viral-satire fursuit — นักล่าบุฟเฟต์ไอติม.', meta: 'Gate-1 87 · กำลังถ่าย 1/6' },
+  { id: 'mother', label: 'คืนนั้น…ฉันกับแม่นาย', cat: 'film', w: 1.4,
+    detail: 'ฝาแฝด gender-swap ของ พ่อเธอ — พระเอกชาย × แม่ม่ายของเพื่อน.', meta: 'Gate-1 83 · FIX ก่อน gen' },
+  { id: 'bodybuilder', label: 'Bodybuilder กร & วิน', cat: 'film', w: 1.8,
+    detail: 'Drama เพาะกาย — เรนเดอร์ครบทุกช็อตแล้ว พร้อมตัดต่อ.', meta: '✅ เสร็จ 14/14' },
+  { id: 'lastbet', label: 'เดิมพันสุดท้าย', cat: 'film', w: 1.5,
+    detail: 'Drama ฟ้า/บอม — เรนเดอร์ครบเงียบ ๆ โดยไม่มีใครบันทึก.', meta: '✅ เสร็จ 5/5' },
+  { id: 'yuzu', label: 'Sparkling Yuzu', cat: 'film', w: 1.5,
+    detail: 'โฆษณาลูกค้า — งานเดียวในคลังที่มีเดดไลน์ภายนอกจริง.', meta: '✅ เสร็จ 3/3 · CLIENT AD' },
+  { id: 'labaris', label: 'Tales of Labaris', cat: 'film', w: 1.6,
+    detail: 'Fantasy manhwa 9:16 จากนิทานภาพ — 11 ตัวละคร 7 อาณาจักร.', meta: 'SB 12/12 · รอไฟเขียว' },
+  { id: 'kai', label: 'ไค — สังเวียนชีวิต', cat: 'film', w: 1.6,
+    detail: 'Drama สู้ชีวิตแนวอนิเมะ — Animation Kai ตอนแรก.', meta: 'SB 12/12 · รอไฟเขียว' },
+  { id: 'rebirth', label: 'เกิดใหม่ฯ', cat: 'film', w: 1.4,
+    detail: 'Anime revenge-drama 46 ช็อต — ล็อกสไตล์อนิเมะที่ระดับ chapter.', meta: 'กำลังถ่าย 1/15 (Loop v3)' },
+  { id: 'streetfood', label: 'ราชาสตรีทฟู้ด', cat: 'film', w: 2,
+    detail: 'Viral comedy ต้นแบบของทุกอย่าง — comic-blockbuster + 6-beat spine + สูตรโปสเตอร์.', meta: 'TEMPLATE ORIGIN · v3 กำลังถ่าย 4/12' },
+  { id: 'volley', label: 'ป้าคอวอลเลย์', cat: 'film', w: 1.4,
+    detail: 'Viral กีฬาป้า — เวอร์ชัน 3 พร้อมเรนเดอร์.', meta: 'SB 6/6 · รอไฟเขียว' },
+  { id: 'cheer', label: 'ศึกสแตนด์เชียร์กีฬาสี', cat: 'film', w: 1.4,
+    detail: 'Viral กีฬาสี — สแตนด์เชียร์คือสมรภูมิ.', meta: 'กำลังถ่าย 2/6' },
+  { id: 'fbdown', label: 'วันที่เฟสล่ม', cat: 'film', w: 1.3,
+    detail: 'Viral-satire — วันที่โซเชียลดับทั้งประเทศ.', meta: 'SB 3/3 · รอไฟเขียว' },
+  { id: 'm6dad', label: 'พ่อจบ ม.6', cat: 'film', w: 1.3,
+    detail: 'Drama ครอบครัว — พ่อวุฒิ ม.6 กับความฝันของลูก.', meta: 'SB 3/3 · รอไฟเขียว' },
+  { id: 'nosleep', label: 'พันธุ์อดนอน', cat: 'film', w: 1.3,
+    detail: 'Viral ดูบอลโลก — สายพันธุ์มนุษย์ที่ไม่ยอมนอน.', meta: 'SB 6/6 · รอไฟเขียว' },
+  { id: 'bossbaby', label: 'เจ้านายตัวน้อย', cat: 'film', w: 1.3,
+    detail: 'Comedy — เจ้านายร่างเด็ก อำนาจเต็มร่าง.', meta: 'SB 6/6 · รอไฟเขียว' },
+  { id: 'homo', label: 'Homo Overtimus', cat: 'film', w: 1.7,
+    detail: 'Wildlife-commentary spoof ตัวแรก — มนุษย์เงินเดือนในฐานะสปีชีส์. franchise machine.', meta: 'Gate-1 90 · SB 6/6 · EP2 พร้อม' },
+  { id: 'noodle', label: 'ก๋วยเตี๋ยวชามเดิม', cat: 'film', w: 1.1,
+    detail: 'เรื่องเล่าร้านก๋วยเตี๋ยว — ความคิดถึงในชามเดิม.', meta: 'PHASE A · prompt 5/5' },
+  { id: 'matcha', label: 'พ่อค้ามัทฉะหล่อ', cat: 'film', w: 1.1,
+    detail: 'Comedy โรแมนซ์หน้าร้านมัทฉะ.', meta: 'PHASE A · prompt 5/5' },
+  { id: 'resign', label: 'ลาออกในตำนาน', cat: 'film', w: 1.1,
+    detail: 'Viral office — การลาออกที่จะถูกเล่าขาน.', meta: 'PHASE A · prompt 6/6' },
+  { id: 'juk', label: 'ตามหาเจ้าจุก', cat: 'film', w: 1.1,
+    detail: 'เรื่องใหม่ล่าสุดของสตูดิโอ — เพิ่งตั้งวันนี้.', meta: 'PHASE A · ใหม่ 10 ก.ค.' },
+  { id: 'padthai', label: 'ผัดไทยหรือยาพิษ', cat: 'film', w: 1.1,
+    detail: 'Comedy ครัวระทึก — prompt ยังไม่ครบ ต้องเก็บงาน.', meta: 'PHASE A · ต้องเช็ค prompt' },
+  { id: 'detective', label: 'นักสืบโซเชียล', cat: 'film', w: 1.2,
+    detail: 'Satire นักสืบชาวเน็ต — เหลือช็อตเดียวถึง Gate 1.', meta: 'SB 4/5 · ใกล้ Gate 1' },
+  { id: 'cat', label: 'เก็บไว้เป็นแมว', cat: 'film', w: 1.2,
+    detail: 'Viral-satire สัตว์เมือง parody ข่าวจับชู้ — deadpan "สงบผิดสัตว์".', meta: 'SB 2/4 · PHASE A' },
+  { id: 'prob', label: 'Probability World', cat: 'film', w: 1,
+    detail: 'ซีรีส์ความน่าจะเป็น 10 ตอน — ตั้งโครงไว้ ยังไม่มีช็อต.', meta: '💤 หลับ · 0 shot' },
+  { id: 'lumi', label: 'LUMI Fizz', cat: 'film', w: 1,
+    detail: 'โฆษณาเครื่องดื่ม — ตั้งโปรเจกต์ไว้ ยังไม่เริ่ม.', meta: '💤 หลับ · 0 shot' },
+  { id: 'goldenhour', label: 'MV Golden Hour', cat: 'film', w: 1,
+    detail: 'มิวสิกวิดีโอเพลงรัก — ตั้งโปรเจกต์ไว้ ยังไม่เริ่ม.', meta: '💤 หลับ · 0 shot' },
+  // classics (ก่อนยุค scan — ต้นตำรับที่สกิลทุกตัวอ้างถึง)
+  { id: 'auntie', label: 'ป้าข้างบ้าน', cat: 'film', w: 1.8,
+    detail: 'The Auntie Next Door — ป้าธรรมดากลายเป็นฮีโร่แอ็กชันระดับโลก. ต้นตำรับ viral-action.', meta: 'CLASSIC · ต้นตำรับ action' },
+  { id: 'grandpa', label: 'ปู่ซ่า ท้าแมลงวัน', cat: 'film', w: 1.7,
+    detail: 'ปู่หนึ่งคน vs แมลงวันหนึ่งตัว — ต้นตำรับ mockumentary ทั้งสาย.', meta: 'CLASSIC · ต้นตำรับ mockumentary' },
+  { id: 'cityanimals', label: 'สัตว์เมือง', cat: 'film', w: 1.8,
+    detail: 'City Animals — สัตว์มาสคอตใช้ชีวิตมนุษย์ไทย. ต้นตำรับ social-satire.', meta: 'CLASSIC · ต้นตำรับ satire' },
+  { id: 'rose', label: 'กุหลาบเผาใจ', cat: 'film', w: 1.4,
+    detail: 'Dramabox ensemble — ที่มาของสูตรปกคู่ collage แดง-ทอง.', meta: 'CLASSIC · ต้นแบบปก Dramabox' },
+
+  // ─── skills ──────────────────────────────────────────────────────────────
+  { id: 'loop', label: 'The Loop', cat: 'skill', w: 2,
+    detail: 'กระบวนการมาตรฐาน end-to-end: บท → storybox → gate → gen วิดีโอทีละช็อตแบบ human-in-the-loop.', meta: 'siamshort_auto_loop v2026-07-06' },
+  { id: 'script', label: 'script-from-novel', cat: 'skill',
+    detail: 'Dynamic Visual Flow — แปลงนิยาย/ไอเดียเป็นบทถ่ายทำที่ action ชัดทุกบรรทัด.' },
+  { id: 'extractor', label: 'story-extractor', cat: 'skill',
+    detail: 'มีเรื่องเต็มแล้ว → ตีบท แตก asset แบ่งตอน ≤3 ช็อต/ตอน จนจบเรื่อง.' },
+  { id: 'radar', label: 'trend-radar', cat: 'skill',
+    detail: 'ล่ากระแสไทยที่สดจริง (พีคใน 7 วัน) → Morning Brief 3 เรื่องทุกเช้า.' },
+  { id: 'director', label: 'fable-auto-director', cat: 'skill',
+    detail: 'ไอเดียหนึ่งบรรทัด → โปรเจกต์หนังคอเมดี้ทั้งเรื่องแบบอัตโนมัติ.' },
+  { id: 'continuity', label: 'shot-continuity', cat: 'skill',
+    detail: 'gen วิดีโอทีละช็อต ล็อกตำแหน่งตัวละคร + ความต่อเนื่องข้ามช็อต.' },
+  { id: 'principles-skill', label: 'film-principles', cat: 'skill',
+    detail: 'ชั้น craft — prompt ที่นิ่ง, ออกแบบตัวละคร/โลก, โครงช็อตที่เล่าเรื่องรู้เรื่อง.' },
+  { id: 'antiplastic', label: 'anti-plastic', cat: 'skill',
+    detail: 'กันผิวพลาสติก/กลิ่น AI — hyperreal 5 แกน M·T·P·I·L ทุก genre.' },
+  { id: 'physics', label: 'physics-guide', cat: 'skill',
+    detail: 'ขยาย action 1 บรรทัดเป็นลูกโซ่ฟิสิกส์ 5 ชั้น + carry เศษ/คราบข้ามช็อต.' },
+  { id: 'poster', label: 'poster-craft', cat: 'skill',
+    detail: 'ศาสตร์โปสเตอร์/ปก/KV กลั่นจากโปสเตอร์จริง ~200 ใบ — 16 layouts, 12 ระบบสี.' },
+  { id: 'v-action', label: 'viral-action', cat: 'skill',
+    detail: 'สูตร found-footage "บ้านๆ × world-class action" จาก ป้าข้างบ้าน.' },
+  { id: 'v-satire', label: 'viral-satire', cat: 'skill',
+    detail: 'สูตร "a day in the life" เสียดสีสังคมตลกร้ายปนเศร้า จาก สัตว์เมือง.' },
+  { id: 'v-mock', label: 'viral-mockumentary', cat: 'skill',
+    detail: 'สูตรสารคดีล้อเลียน — คนหนึ่ง vs ศัตรูจิ๋วหนึ่ง ถ่ายแบบ epic.' },
+  { id: 'v-drama', label: 'drama-inspirational', cat: 'skill',
+    detail: 'สูตรดราม่าสู้ชีวิต — ลมหายใจยาว, แสงเล่าเรื่อง, ความยับยั้งเหนือ spectacle.' },
+  { id: 'v-hook', label: 'viral-hook', cat: 'skill',
+    detail: 'เครื่องยนต์ 3 วินาทีแรก — หยุดนิ้วคนไถฟีด.' },
+  { id: 'v-template', label: 'viral-prompt-template', cat: 'skill',
+    detail: 'เทมเพลต prompt แบบเติมคำ — 6-beat spine + SFX + สูตรโปสเตอร์ จาก ราชาสตรีทฟู้ด.' },
+  { id: 'v-score', label: 'viral-score', cat: 'skill', w: 1.6,
+    detail: '2 ด่าน QC: Gate 1 คุณภาพ /100 ก่อน gen · Gate 2 ทำนายไวรัลก่อนโพสต์.' },
+  { id: 'brief', label: 'executive-brief-craft', cat: 'skill',
+    detail: 'เปลี่ยนกองข้อมูลเป็นบรีฟตัดสินใจ 60 วินาที — answer-first เสมอ.' },
+  { id: 'hyperframes', label: 'hyperframes-edit', cat: 'skill',
+    detail: 'ตัดต่อ HTML→MP4 บนเครื่องนี้ — ประกอบคลิปเป็น final cut ตามลำดับ storybox.' },
+  { id: 'strudel', label: 'strudel-music', cat: 'skill',
+    detail: 'แต่งเพลง/SFX ด้วย live-coding — เว็บ Strudel เต็มระบบบน localhost.' },
+  { id: 'webcheck', label: 'web-check', cat: 'skill',
+    detail: 'เลนเบราว์เซอร์ headless ผ่าน Playwright — ตรวจเว็บจริงได้แม้ตอน cron.' },
+  { id: 'docdesign', label: 'doc-design', cat: 'skill',
+    detail: 'ระบบออกแบบเอกสาร/เว็บรายงานสไตล์ manus — ดำอุ่น+ทอง, diegetic framing.' },
+
+  // ─── knowledge ───────────────────────────────────────────────────────────
+  { id: 'ratchet', label: 'Quality Ratchet', cat: 'knowledge', w: 1.8,
+    detail: 'กฎเหล็ก: โปรเจกต์ใหม่ต้องดีกว่าของเก่าทุกครั้ง และต้องบอกชื่อสิ่งที่ดีขึ้นได้.', meta: 'high-water = 99 (คู่แฝดสมการ)' },
+  { id: 'va', label: 'VA enforcement', cat: 'knowledge',
+    detail: 'ทุก ref ภาพ/วิดีโอต้องเป็น Virtual Asset ก่อน gen — เช็ค dedup ก่อนสร้างเสมอ.' },
+  { id: 'poll', label: 'gen ช้า = poll อย่ายิงซ้ำ', cat: 'knowledge',
+    detail: 'client timeout ~60s แต่ server เสร็จ ~4-5 นาที — รอแล้ว poll, ยิงซ้ำ = เผา credit.' },
+  { id: 'sheet', label: 'storyboard = SHEET', cat: 'knowledge',
+    detail: 'backend เรนเดอร์ storyboard เป็น sheet หลายช่องเสมอ — ตอน gen video ให้อ้าง asset สะอาด.' },
+  { id: 'variant', label: 'dynamic asset-variant', cat: 'knowledge',
+    detail: 'before/after: อ้าง base + layer เฉพาะส่วนที่เปลี่ยน → ล็อก identity หน้า/ทรง.' },
+  { id: 'coverrule', label: 'cover = generate ห้าม composite', cat: 'knowledge',
+    detail: 'ปกต้อง generate_cover @char ในโลกของเรื่อง — ห้ามตัดแปะทีหลัง (คำสั่งคุณนุขา).' },
+  { id: 'realrefs', label: 'shots ต้องอ้าง asset จริง', cat: 'knowledge',
+    detail: 'ทุกช็อตต้อง link asset จริง + ส่ง referenceUrls — ห้ามให้ AI เดาหน้าคน.' },
+  { id: 'twollm', label: 'two-LLM flow', cat: 'knowledge',
+    detail: 'Opus เป็นหัวหน้าวางแผน-ตัดสินคุณภาพ · Sonnet เป็นลูกมือทำงานซ้ำ ๆ ประหยัด context.' },
+  { id: 'previs', label: 'previs position-lock', cat: 'knowledge',
+    detail: 'ล็อกตำแหน่งด้วยหุ่นสี blueprint + 3D previs ก่อน gen จริง.' },
+  { id: 'vid2vid', label: 'vid2vid performance-clone', cat: 'knowledge',
+    detail: 'ถ่ายคนจริงแล้ว clone การแสดง+เสียงลงตัวละคร AI ผ่าน Seedance 2.0.' },
+  { id: 'swipefile', label: 'viral format swipe-file', cat: 'knowledge',
+    detail: 'คลัง 12 ฟอร์แมตไวรัล 10-100M views — mundane-epic, wildlife-spoof, bodycam.' },
+  { id: 'tribe', label: 'TRIBE predictor', cat: 'knowledge',
+    detail: 'โมเดลทำนายการตอบสนองสมองคนดู — ด่าน Gate 2 ก่อนโพสต์จริง.' },
+  { id: 'breath', label: '3-breath drama grammar', cat: 'knowledge',
+    detail: 'ไวยากรณ์ดราม่า 3 ลมหายใจ — ชนะสูตรไวรัลขาดลอยในสายอารมณ์ (46:18).' },
+  { id: 'sixbeat', label: '6-beat viral spine', cat: 'knowledge',
+    detail: 'กระดูกสันหลังไวรัล 6 จังหวะพร้อม timecode — ทุก storyboard ไวรัลต้องใช้.' },
+  { id: 'mtpil', label: 'M·T·P·I·L', cat: 'knowledge',
+    detail: '5 แกนหลักฐานความจริงของภาพ: Medium · Texture · Physics · Imperfection · Light.' },
+  { id: 'chain', label: 'ลูกโซ่ฟิสิกส์ 5 ชั้น', cat: 'knowledge',
+    detail: 'ของตกไม่จบที่พื้น — เหตุการณ์หลัก → ลูกโซ่ → reflex → โลกตอบสนอง → เศษ/คราบไปช็อตถัดไป.' },
+  { id: 'foundry', label: 'Fire-Once Foundry', cat: 'knowledge',
+    detail: 'พิมพ์เขียวระบบ gen→QC→fix อัตโนมัติ — DBOS + Agent SDK + QC 2 ชั้น ($0.005/คลิป).', meta: 'รอ 3 มติคุณนุขา' },
+];
+
+// ─── links — เส้นเลือดของสมอง (อ้าง id ทั้งคู่ต้องมีจริง) ─────────────────────
+export const links: [string, string][] = [
+  // identity spine
+  ['lucy', 'nukha'], ['lucy', 'soul-brews'], ['lucy', 'starter-kit'], ['lucy', 'psi-brain'],
+  ['lucy', 'ethereal'], ['starter-kit', 'soul-brews'], ['psi-brain', 'starter-kit'],
+  // principles orbit the core
+  ['lucy', 'p1'], ['lucy', 'p2'], ['lucy', 'p3'], ['lucy', 'p4'], ['lucy', 'p5'],
+  ['p1', 'psi-brain'], ['p3', 'nukha'],
+  // crew reports to Lucy + owns their craft
+  ['lucy', 'kawee'], ['lucy', 'inn'], ['lucy', 'kor'], ['lucy', 'khem'], ['lucy', 'phukan'],
+  ['lucy', 'riang'], ['lucy', 'note'], ['lucy', 'reader'], ['lucy', 'checker'], ['lucy', 'runner'],
+  ['kawee', 'script'], ['inn', 'continuity'], ['kor', 'loop'], ['khem', 'v-score'],
+  ['phukan', 'poster'], ['riang', 'brief'], ['note', 'strudel'], ['checker', 'va'],
+  ['runner', 'poll'], ['reader', 'twollm'],
+  // skill tree
+  ['lucy', 'loop'], ['loop', 'script'], ['loop', 'continuity'], ['loop', 'v-score'],
+  ['loop', 'antiplastic'], ['loop', 'physics'], ['script', 'extractor'],
+  ['principles-skill', 'v-action'], ['principles-skill', 'v-satire'], ['principles-skill', 'v-mock'],
+  ['principles-skill', 'v-drama'], ['loop', 'principles-skill'],
+  ['v-hook', 'v-action'], ['v-hook', 'v-satire'], ['v-hook', 'v-mock'],
+  ['v-template', 'v-hook'], ['v-template', 'v-score'], ['poster', 'v-score'],
+  ['radar', 'v-hook'], ['radar', 'director'], ['radar', 'swipefile'],
+  ['docdesign', 'brief'], ['webcheck', 'radar'], ['hyperframes', 'continuity'],
+  ['strudel', 'hyperframes'],
+  // knowledge ↔ skill
+  ['ratchet', 'v-score'], ['va', 'realrefs'], ['sheet', 'continuity'], ['variant', 'va'],
+  ['coverrule', 'poster'], ['tribe', 'v-score'], ['sixbeat', 'v-template'],
+  ['breath', 'v-drama'], ['mtpil', 'antiplastic'], ['chain', 'physics'],
+  ['previs', 'continuity'], ['vid2vid', 'continuity'], ['twollm', 'loop'],
+  ['poll', 'loop'], ['foundry', 'loop'], ['realrefs', 'continuity'],
+  // films → the skill that made them
+  ['twins', 'v-satire'], ['twins', 'ratchet'], ['janomata', 'v-satire'], ['ngua', 'v-satire'],
+  ['ngua', 'radar'], ['father', 'v-drama'], ['mother', 'father'], ['mher', 'v-mock'],
+  ['mosquito', 'v-mock'], ['mosquito', 'grandpa'], ['asura', 'extractor'], ['asura', 'poster'],
+  ['rampart', 'v-mock'], ['office', 'v-satire'], ['chicken', 'office'], ['buffet', 'v-satire'],
+  ['bodybuilder', 'v-drama'], ['lastbet', 'v-drama'], ['yuzu', 'director'],
+  ['labaris', 'extractor'], ['kai', 'v-drama'], ['kai', 'breath'], ['rebirth', 'loop'],
+  ['streetfood', 'v-template'], ['streetfood', 'radar'], ['volley', 'v-action'],
+  ['cheer', 'v-action'], ['fbdown', 'v-satire'], ['m6dad', 'v-drama'], ['nosleep', 'v-satire'],
+  ['bossbaby', 'director'], ['homo', 'v-mock'], ['homo', 'swipefile'], ['noodle', 'v-drama'],
+  ['matcha', 'director'], ['resign', 'v-satire'], ['juk', 'director'], ['padthai', 'director'],
+  ['detective', 'v-satire'], ['cat', 'cityanimals'], ['prob', 'script'], ['lumi', 'yuzu'],
+  ['goldenhour', 'strudel'],
+  // classics feed their recipes
+  ['auntie', 'v-action'], ['grandpa', 'v-mock'], ['cityanimals', 'v-satire'],
+  ['rose', 'poster'], ['cat', 'v-satire'],
+  // the ratchet lineage — each record-breaker linked to the previous
+  ['mosquito', 'ratchet'], ['janomata', 'ratchet'], ['janomata', 'twins'],
+];
+
+// derived counts — hero chips read these so they never drift from the data
+export const counts = (() => {
+  const by: Record<string, number> = {};
+  for (const n of nodes) by[n.cat] = (by[n.cat] || 0) + 1;
+  return {
+    films: by.film || 0,
+    skills: by.skill || 0,
+    knowledge: by.knowledge || 0,
+    crew: (by.crew || 0) + 1, // + Lucy herself = ทีม 11 จิต
+    nodes: nodes.length,
+    links: links.length,
+  };
+})();
