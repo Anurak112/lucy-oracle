@@ -1,0 +1,23 @@
+---
+// ψ Cosmos — fixed full-viewport space layer behind the whole page.
+---
+
+<canvas id="cosmos-canvas" aria-hidden="true"></canvas>
+
+<script>
+  import { initCosmos } from '../scripts/cosmos.js';
+  initCosmos();
+  document.addEventListener('astro:after-swap', initCosmos);
+</script>
+
+<style>
+  #cosmos-canvas {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 0;
+    pointer-events: none;
+    display: block;
+  }
+</style>

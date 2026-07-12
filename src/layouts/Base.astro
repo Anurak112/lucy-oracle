@@ -1,5 +1,6 @@
 ---
 import { ClientRouter } from 'astro:transitions';
+import Cosmos from '../components/Cosmos.astro';
 import { meta } from '../data/site';
 
 interface Props {
@@ -62,6 +63,7 @@ const jsonLd = {
     <ClientRouter />
   </head>
   <body>
+    <Cosmos />
     <slot />
   </body>
 </html>
@@ -123,6 +125,8 @@ const jsonLd = {
     max-width: 1020px;
     margin: 0 auto;
     padding: 0 22px;
+    position: relative;
+    z-index: 1;
   }
   .mono {
     font-family: var(--mono);
@@ -199,7 +203,9 @@ const jsonLd = {
     margin-top: 26px;
   }
   .card {
-    background: var(--card);
+    background: rgba(23, 18, 16, 0.72);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     border: 1px solid var(--line-soft);
     border-radius: 14px;
     padding: 20px 22px;
@@ -207,7 +213,7 @@ const jsonLd = {
   }
   .card:hover {
     border-color: var(--line);
-    background: var(--card-hover);
+    background: rgba(30, 23, 18, 0.82);
   }
   .card h3 {
     font-size: 15.5px;
