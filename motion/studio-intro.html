@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="th" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Serif+Thai:wght@500;700;800&family=JetBrains+Mono:wght@500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1920px; height: 1080px; overflow: hidden; background: #0d0b09; }
+      #root { position: relative; width: 1920px; height: 1080px; background: #0d0b09; overflow: hidden; }
+      .serif { font-family: "Noto Serif Thai", serif; }
+      .mono { font-family: "JetBrains Mono", monospace; }
+      .ember { position: absolute; border-radius: 50%; background: #f0b84b; box-shadow: 0 0 8px 1px rgba(228, 158, 34, 0.8); }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="6"
+      data-width="1920"
+      data-height="1080"
+    >
+      <!-- background glow -->
+      <div id="glow" class="clip" data-start="0" data-duration="6" data-track-index="0"
+        style="position:absolute; inset:0; background: radial-gradient(58% 58% at 50% 44%, rgba(228,158,34,0.22), rgba(228,158,34,0.05) 42%, transparent 66%);"></div>
+
+      <!-- ember field -->
+      <div id="embers" class="clip" data-start="0" data-duration="6" data-track-index="1"
+        style="position:absolute; inset:0;"></div>
+
+      <!-- orbit ring -->
+      <div id="ring" class="clip" data-start="1" data-duration="5" data-track-index="2"
+        style="position:absolute; left:960px; top:475px; width:540px; height:540px; margin:-270px 0 0 -270px; border-radius:50%; border:1px solid rgba(228,158,34,0.55); box-shadow: inset 0 0 60px rgba(228,158,34,0.18), 0 0 40px rgba(228,158,34,0.15);"></div>
+
+      <!-- psi glyph -->
+      <div id="psi" class="clip serif" data-start="0" data-duration="6" data-track-index="3"
+        style="position:absolute; left:0; right:0; top:175px; height:600px; line-height:600px; text-align:center; font-size:300px; font-weight:700; color:#f6e7c6; text-shadow: 0 0 60px rgba(228,158,34,0.85), 0 0 130px rgba(228,158,34,0.45);">ψ</div>
+
+      <!-- ignite flash -->
+      <div id="flash" class="clip" data-start="0.9" data-duration="0.9" data-track-index="6"
+        style="position:absolute; inset:0; opacity:0; background: radial-gradient(38% 38% at 50% 44%, rgba(255,249,232,0.95), transparent 55%);"></div>
+
+      <!-- title -->
+      <div id="title" class="clip serif" data-start="2.4" data-duration="3.6" data-track-index="8"
+        style="position:absolute; left:0; right:0; top:698px; height:118px; line-height:118px; text-align:center; font-size:96px; font-weight:800; color:#e9dcc4; text-shadow: 0 2px 30px rgba(13,11,9,0.6);">ลูซี่ · Lucy</div>
+
+      <!-- kicker -->
+      <div id="kicker" class="clip mono" data-start="3.0" data-duration="3.0" data-track-index="9"
+        style="position:absolute; left:0; right:0; top:842px; height:34px; line-height:34px; text-align:center; font-size:25px; letter-spacing:0.42em; text-transform:uppercase; color:#e49e22;">Oracle Studio · The Storyteller of Siam</div>
+
+      <!-- motto -->
+      <div id="motto" class="clip serif" data-start="3.8" data-duration="2.2" data-track-index="10"
+        style="position:absolute; left:0; right:0; top:898px; height:46px; line-height:46px; text-align:center; font-style:italic; font-size:31px; color:#a59585;">“The oracle keeps the human human.”</div>
+
+      <!-- vignette -->
+      <div class="clip" data-start="0" data-duration="6" data-track-index="7"
+        style="position:absolute; inset:0; pointer-events:none; box-shadow: inset 0 0 320px rgba(0,0,0,0.85);"></div>
+    </div>
+
+    <script>
+      // deterministic ember field (no Math.random — seek-safe)
+      (function () {
+        var box = document.getElementById("embers");
+        var N = 34;
+        var rnd = function (i, s) {
+          var x = Math.sin(i * 12.9898 + s * 78.233) * 43758.5453;
+          return x - Math.floor(x);
+        };
+        for (var i = 0; i < N; i++) {
+          var e = document.createElement("div");
+          e.className = "ember";
+          var sz = 2 + rnd(i, 2) * 5;
+          e.style.left = (6 + rnd(i, 1) * 88).toFixed(2) + "%";
+          e.style.top = (55 + rnd(i, 3) * 46).toFixed(2) + "%";
+          e.style.width = sz.toFixed(1) + "px";
+          e.style.height = sz.toFixed(1) + "px";
+          e.style.opacity = "0";
+          box.appendChild(e);
+        }
+      })();
+
+      window.__timelines = window.__timelines || {};
+      var tl = gsap.timeline({ paused: true });
+
+      // glow blooms in, then breathes
+      tl.fromTo("#glow", { opacity: 0, scale: 0.82, transformOrigin: "50% 44%" },
+        { opacity: 1, scale: 1, duration: 1.5, ease: "power2.out" }, 0);
+      tl.to("#glow", { opacity: 0.82, duration: 2.2, ease: "sine.inOut" }, 3.2);
+
+      // embers drift up and fade
+      tl.to(".ember", { opacity: 0.9, duration: 0.6, stagger: 0.025 }, 0.2);
+      tl.to(".ember", { y: -160, duration: 4.2, ease: "power1.out", stagger: 0.025 }, 0.2);
+      tl.to(".ember", { opacity: 0, duration: 1.4, stagger: 0.02 }, 3.4);
+
+      // ψ ignites
+      tl.fromTo("#psi", { opacity: 0, scale: 0.42 },
+        { opacity: 1, scale: 1, duration: 1.3, ease: "back.out(1.5)" }, 0.45);
+      tl.to("#psi", { scale: 1.06, duration: 0.16, ease: "power2.out" }, 0.95);
+      tl.to("#psi", { scale: 1.0, duration: 0.5, ease: "power2.inOut" }, 1.11);
+      tl.to("#psi", { scale: 0.82, y: -34, duration: 1.1, ease: "power3.inOut" }, 2.3);
+
+      // ignite flash
+      tl.fromTo("#flash", { opacity: 0 }, { opacity: 1, duration: 0.14, ease: "power2.out" }, 0.96);
+      tl.to("#flash", { opacity: 0, duration: 0.7, ease: "power2.in" }, 1.12);
+
+      // orbit ring
+      tl.fromTo("#ring", { opacity: 0, scale: 0.28, rotate: -45, transformOrigin: "50% 50%" },
+        { opacity: 0.75, scale: 1, rotate: 0, duration: 1.5, ease: "power3.out" }, 0.95);
+      tl.to("#ring", { rotate: 55, duration: 4.6, ease: "none" }, 0.95);
+      tl.to("#ring", { opacity: 0.28, scale: 1.08, duration: 1.6, ease: "sine.inOut" }, 3.4);
+
+      // title reveal
+      tl.fromTo("#title", { opacity: 0, y: 44 },
+        { opacity: 1, y: 0, duration: 1.0, ease: "power4.out" }, 2.5);
+      // kicker
+      tl.fromTo("#kicker", { opacity: 0, y: 14 },
+        { opacity: 1, y: 0, duration: 1.1, ease: "power3.out" }, 3.05);
+      // motto
+      tl.fromTo("#motto", { opacity: 0, y: 10 },
+        { opacity: 0.92, y: 0, duration: 1.0, ease: "power2.out" }, 3.85);
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>
