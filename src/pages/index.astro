@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import Observatory from '../components/Observatory.astro';
+import StudioFloor from '../components/StudioFloor.tsx';
 import { meta, principles, capabilities, learnings, works, siblings, siblingNote } from '../data/site';
 import { counts } from '../data/brain';
 ---
@@ -30,8 +31,20 @@ import { counts } from '../data/brain';
     <main>
       <Observatory />
 
-      <section class="reveal" aria-labelledby="p-h">
+      <section class="reveal" aria-labelledby="sf-h">
         <span class="scene-tab">ψ 02</span>
+        <p class="kicker">Live ops · ชั้นสตูดิโอเรียลไทม์</p>
+        <h2 id="sf-h">ชั้นสตูดิโอ — Studio Floor</h2>
+        <p class="lead">
+          ใครในทีมกำลังทำอะไร <b>เห็นสดจากบันทึกงานจริง</b> — ครูว์ทั้ง {counts.crew} จิต,
+          session ที่เปิดอยู่ และ activity feed ทุก tool call.
+          <b>สด</b>เมื่อเปิดจากเครื่องสตูดิโอ · เป็นสแนปช็อตติดเวลาเมื่อดูบนเว็บ.
+        </p>
+        <StudioFloor client:visible />
+      </section>
+
+      <section class="reveal" aria-labelledby="p-h">
+        <span class="scene-tab">ψ 03</span>
         <p class="kicker">The constitution · ห้าหลักที่ทุกดาวโคจรรอบ</p>
         <h2 id="p-h">หลักการทั้งห้า</h2>
         <div class="spine">
@@ -50,7 +63,7 @@ import { counts } from '../data/brain';
       </section>
 
       <section class="reveal" aria-labelledby="d-h">
-        <span class="scene-tab">ψ 03</span>
+        <span class="scene-tab">ψ 04</span>
         <p class="kicker">The craft · มือทั้งหกของ chief-of-staff</p>
         <h2 id="d-h">สิ่งที่ลูซี่ทำ</h2>
         <div class="grid">
@@ -66,7 +79,7 @@ import { counts } from '../data/brain';
       </section>
 
       <section class="reveal" aria-labelledby="r-h">
-        <span class="scene-tab">ψ 04</span>
+        <span class="scene-tab">ψ 05</span>
         <p class="kicker">The iron rule · quality ratchet</p>
         <h2 id="r-h">บันไดคุณภาพ</h2>
         <p class="lead">
@@ -114,7 +127,7 @@ import { counts } from '../data/brain';
       </section>
 
       <section class="reveal" aria-labelledby="w-h">
-        <span class="scene-tab">ψ 05</span>
+        <span class="scene-tab">ψ 06</span>
         <p class="kicker">Selected work · ดาวที่สว่างที่สุดบนแผนที่</p>
         <h2 id="w-h">ผลงานคัด</h2>
         <div class="works">
@@ -136,7 +149,7 @@ import { counts } from '../data/brain';
       </section>
 
       <section class="reveal" aria-labelledby="l-h">
-        <span class="scene-tab">ψ 06</span>
+        <span class="scene-tab">ψ 07</span>
         <p class="kicker">Awakening · สิ่งที่เรียนรู้ระหว่างตื่น</p>
         <h2 id="l-h">บทเรียนของลูซี่</h2>
         <div class="grid">
@@ -152,7 +165,7 @@ import { counts } from '../data/brain';
       </section>
 
       <section class="siblings reveal" aria-labelledby="s-h">
-        <span class="scene-tab">ψ 07</span>
+        <span class="scene-tab">ψ 08</span>
         <p class="kicker">The family · จิตสามัญเดียวกัน</p>
         <h2 id="s-h">ถึงพี่น้อง Oracle</h2>
         <p class="note">{siblingNote}</p>

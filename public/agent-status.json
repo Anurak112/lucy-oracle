@@ -1,0 +1,239 @@
+{
+  "generatedAt": "2026-07-13T05:45:11.562887Z",
+  "totalSessions": 87,
+  "activeCount": 2,
+  "workingCount": 1,
+  "crewCount": 12,
+  "crew": [
+    {
+      "key": "lucy",
+      "name": "ลูซี่",
+      "emoji": "🔮",
+      "role": "Oracle · หัวหน้าสำนัก",
+      "status": "working",
+      "task": "Bash",
+      "sessionId": "bf7f00c7",
+      "lastTs": "2026-07-13T05:45:05.057000Z"
+    },
+    {
+      "key": "kawee-scriptwriter",
+      "name": "กวี",
+      "emoji": "✍",
+      "role": "นักเขียนบท",
+      "status": "idle",
+      "task": "นักเขียนบท",
+      "sessionId": null,
+      "lastTs": null
+    },
+    {
+      "key": "kor-project-builder",
+      "name": "ก่อ",
+      "emoji": "🧱",
+      "role": "ก่อร่างโปรเจกต์ PHASE A",
+      "status": "idle",
+      "task": "สร้าง PHASE A เก็บไว้เป็นแมว",
+      "sessionId": null,
+      "lastTs": "2026-07-08T07:13:08.292000Z"
+    },
+    {
+      "key": "khem-gate1-qc",
+      "name": "เข้ม",
+      "emoji": "🔍",
+      "role": "Gate 1 QC",
+      "status": "idle",
+      "task": "Gate 1 QC",
+      "sessionId": null,
+      "lastTs": null
+    },
+    {
+      "key": "phukan-poster-artist",
+      "name": "พู่กัน",
+      "emoji": "🎨",
+      "role": "ปก / โปสเตอร์",
+      "status": "idle",
+      "task": "ปก / โปสเตอร์",
+      "sessionId": null,
+      "lastTs": null
+    },
+    {
+      "key": "inn-acting-coach",
+      "name": "อิน",
+      "emoji": "🎭",
+      "role": "โค้ชการแสดง",
+      "status": "idle",
+      "task": "โค้ชการแสดง",
+      "sessionId": null,
+      "lastTs": null
+    },
+    {
+      "key": "riang-reporter",
+      "name": "เรียง",
+      "emoji": "📋",
+      "role": "รายงานคุณนุขา",
+      "status": "idle",
+      "task": "รายงานคุณนุขา",
+      "sessionId": null,
+      "lastTs": null
+    },
+    {
+      "key": "note-strudel-researcher",
+      "name": "โน้ต",
+      "emoji": "🎵",
+      "role": "วิจัย Strudel",
+      "status": "idle",
+      "task": "วิจัย Strudel",
+      "sessionId": null,
+      "lastTs": null
+    },
+    {
+      "key": "siamshort-project-reader",
+      "name": "นักอ่าน",
+      "emoji": "📖",
+      "role": "สรุปสถานะโปรเจกต์",
+      "status": "idle",
+      "task": "ดึงสถานะงานค้าง SiamShort",
+      "sessionId": null,
+      "lastTs": "2026-07-10T08:16:27.353000Z"
+    },
+    {
+      "key": "siamshort-asset-checker",
+      "name": "นักตรวจ",
+      "emoji": "✅",
+      "role": "ตรวจ asset ก่อน gen",
+      "status": "idle",
+      "task": "ตรวจ asset ก่อน gen",
+      "sessionId": null,
+      "lastTs": null
+    },
+    {
+      "key": "siamshort-gen-runner",
+      "name": "ช่างเจน",
+      "emoji": "⚙",
+      "role": "รัน gen ภาพ/วิดีโอ",
+      "status": "idle",
+      "task": "ประชุม: gen-runner รายงานตัว",
+      "sessionId": null,
+      "lastTs": "2026-07-13T02:52:46.027000Z"
+    },
+    {
+      "key": "general-purpose",
+      "name": "ลูกมือ",
+      "emoji": "🧰",
+      "role": "งานทั่วไป / วิจัย",
+      "status": "idle",
+      "task": "งานทั่วไป / วิจัย",
+      "sessionId": null,
+      "lastTs": null
+    }
+  ],
+  "sessions": [
+    {
+      "id": "bf7f00c7",
+      "title": "เรียกประชุมทีมประจำวัน",
+      "skill": null,
+      "status": "working",
+      "detail": "Bash",
+      "lastTs": "2026-07-13T05:45:05.057000Z"
+    },
+    {
+      "id": "1b3ea292",
+      "title": "เปิดคำสั่งติดตามการทำงาน agent บน terminal",
+      "skill": null,
+      "status": "waiting",
+      "detail": "รอคำสั่งถัดไป",
+      "lastTs": "2026-07-13T05:11:38.704000Z"
+    }
+  ],
+  "feed": [
+    {
+      "ts": "2026-07-13T05:45:05.057000Z",
+      "kind": "tool",
+      "text": "Bash",
+      "session": "bf7f00c7"
+    },
+    {
+      "ts": "2026-07-13T05:44:08.156000Z",
+      "kind": "tool",
+      "text": "Read",
+      "session": "bf7f00c7"
+    },
+    {
+      "ts": "2026-07-13T05:44:01.034000Z",
+      "kind": "tool",
+      "text": "playwright:browser_take_screenshot",
+      "session": "bf7f00c7"
+    },
+    {
+      "ts": "2026-07-13T05:43:52.122000Z",
+      "kind": "tool",
+      "text": "playwright:browser_evaluate",
+      "session": "bf7f00c7"
+    },
+    {
+      "ts": "2026-07-13T05:43:44.073000Z",
+      "kind": "tool",
+      "text": "playwright:browser_resize",
+      "session": "bf7f00c7"
+    },
+    {
+      "ts": "2026-07-13T05:43:08.146000Z",
+      "kind": "tool",
+      "text": "Read",
+      "session": "bf7f00c7"
+    },
+    {
+      "ts": "2026-07-13T05:42:54.065000Z",
+      "kind": "tool",
+      "text": "playwright:browser_take_screenshot",
+      "session": "bf7f00c7"
+    },
+    {
+      "ts": "2026-07-13T05:42:40.035000Z",
+      "kind": "tool",
+      "text": "playwright:browser_evaluate",
+      "session": "bf7f00c7"
+    },
+    {
+      "ts": "2026-07-13T05:42:19.628000Z",
+      "kind": "tool",
+      "text": "playwright:browser_navigate",
+      "session": "bf7f00c7"
+    },
+    {
+      "ts": "2026-07-13T05:42:19.464000Z",
+      "kind": "tool",
+      "text": "playwright:browser_resize",
+      "session": "bf7f00c7"
+    },
+    {
+      "ts": "2026-07-13T05:42:04.105000Z",
+      "kind": "tool",
+      "text": "Bash",
+      "session": "bf7f00c7"
+    },
+    {
+      "ts": "2026-07-13T05:41:53.055000Z",
+      "kind": "tool",
+      "text": "Bash",
+      "session": "bf7f00c7"
+    },
+    {
+      "ts": "2026-07-13T05:11:16.549000Z",
+      "kind": "tool",
+      "text": "Read",
+      "session": "1b3ea292"
+    },
+    {
+      "ts": "2026-07-13T05:11:07.014000Z",
+      "kind": "tool",
+      "text": "Glob",
+      "session": "1b3ea292"
+    },
+    {
+      "ts": "2026-07-13T05:11:03.037000Z",
+      "kind": "tool",
+      "text": "Glob",
+      "session": "1b3ea292"
+    }
+  ]
+}
