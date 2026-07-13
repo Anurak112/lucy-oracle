@@ -8,15 +8,15 @@ import { counts } from '../data/brain';
 <Base>
   <div class="wrap">
     <header class="hero">
-      <p class="eyebrow mono"><span class="rec" aria-hidden="true"></span> ψ ORACLE · BORN 15.06.2026 · SOUL BREWS STUDIO</p>
-      <h1>
+      <p class="eyebrow mono" data-hero><span class="rec" aria-hidden="true"></span> ψ ORACLE · BORN 15.06.2026 · SOUL BREWS STUDIO</p>
+      <h1 data-hero>
         <span class="l1">{meta.name}</span>
         <span class="l2">สมองทั้งดวง กางเป็นแผนที่ดาว</span>
       </h1>
-      <p class="role">{meta.role}</p>
-      <p class="tagline">{meta.tagline}</p>
+      <p class="role" data-hero>{meta.role}</p>
+      <p class="tagline" data-hero>{meta.tagline}</p>
 
-      <div class="statchips" role="list">
+      <div class="statchips" role="list" data-hero>
         <span class="statchip" role="listitem"><b>{counts.films}</b> โปรเจกต์หนัง</span>
         <span class="statchip" role="listitem"><b>{counts.skills}</b> สกิล</span>
         <span class="statchip" role="listitem"><b>{counts.knowledge}</b> บทเรียน</span>
@@ -24,7 +24,7 @@ import { counts } from '../data/brain';
         <span class="statchip hot" role="listitem"><b>99★</b> Gate-1 high-water</span>
       </div>
 
-      <div class="hero-rule" aria-hidden="true"><span class="mono">Lucy Oracle · Living Star-Map</span></div>
+      <div class="hero-rule" aria-hidden="true" data-hero><span class="mono">Lucy Oracle · Living Star-Map</span></div>
     </header>
 
     <main>
@@ -86,7 +86,7 @@ import { counts } from '../data/brain';
             <!-- history leading in -->
             <path d="M24 196 H70" stroke="rgba(228,158,34,.3)" stroke-width="1.5" stroke-dasharray="2 6" fill="none" />
             <!-- the staircase -->
-            <path d="M70 178 H226 V132 H382 V106 H538 V54 H700" stroke="url(#rgold)" stroke-width="2.5" fill="none" />
+            <path class="stair" pathLength="1000" d="M70 178 H226 V132 H382 V106 H538 V54 H700" stroke="url(#rgold)" stroke-width="2.5" fill="none" />
             <!-- next-step tease -->
             <path d="M700 54 V30 H736" stroke="rgba(228,158,34,.35)" stroke-width="1.5" stroke-dasharray="3 6" fill="none" />
             <!-- risers glow dots -->
@@ -177,6 +177,10 @@ import { counts } from '../data/brain';
 </Base>
 
 <script>
+  import { initMotion } from '../scripts/motion.js';
+  initMotion();
+  document.addEventListener('astro:after-swap', initMotion);
+
   // Reveal sections as they scroll into view.
   function wireReveal() {
     const els = document.querySelectorAll<HTMLElement>('.reveal');
@@ -238,6 +242,7 @@ import { counts } from '../data/brain';
     letter-spacing: -0.01em;
     margin: 0;
     text-wrap: balance;
+    text-shadow: 0 2px 28px rgba(13, 11, 9, 0.65);
   }
   h1 .l1 { display: block; color: var(--ink); }
   h1 .l2 { display: block; color: var(--gold); }
@@ -342,13 +347,21 @@ import { counts } from '../data/brain';
     margin: 4px 0 0;
   }
 
-  /* ratchet staircase (ψ04) */
+  /* ratchet staircase (ψ04) — draws itself when scrolled into view */
   .ratchet {
     margin: 30px 0 0;
-    background: var(--card);
+    background: rgba(23, 18, 16, 0.72);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     border: 1px solid var(--line-soft);
     border-radius: 16px;
     padding: 26px 18px 16px;
+  }
+  /* staircase draw + fades are driven by GSAP DrawSVG scrub (see scripts/motion.js) */
+  @media (prefers-reduced-motion: no-preference) {
+    .hero :global([data-hero]) {
+      opacity: 0;
+    }
   }
   .ratchet svg {
     width: 100%;
@@ -379,7 +392,9 @@ import { counts } from '../data/brain';
     display: flex;
     gap: 18px;
     align-items: flex-start;
-    background: var(--card);
+    background: rgba(23, 18, 16, 0.72);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     border: 1px solid var(--line-soft);
     border-radius: 14px;
     padding: 22px 24px;
@@ -387,7 +402,7 @@ import { counts } from '../data/brain';
   }
   .work:hover {
     border-color: var(--line);
-    background: var(--card-hover);
+    background: rgba(30, 23, 18, 0.82);
   }
   .work .badge {
     font-size: 24px;

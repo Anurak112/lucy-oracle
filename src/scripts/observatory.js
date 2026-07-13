@@ -4,6 +4,10 @@
 
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
+import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js';
 
 const REDUCE = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -140,12 +144,49 @@ export function initObservatory() {
     stage.classList.add('no-webgl');
     return;
   }
-  renderer.setClearColor(0x000000, 0);
-
   const scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x0d0a07);
   const camera = new THREE.PerspectiveCamera(55, 1, 1, 2500);
   const HOME = new THREE.Vector3(28, 16, 312);
   camera.position.copy(HOME);
+
+  // bloom pipeline — real glow, the difference between "bright" and "burning"
+  const composer = new EffectComposer(renderer);
+  composer.addPass(new RenderPass(scene, camera));
+  const bloom = new UnrealBloomPass(new THREE.Vector2(1, 1), 0.9, 0.55, 0.18);
+  composer.addPass(bloom);
+  composer.addPass(new OutputPass());
+
+  // in-scene nebula tints (the stage background now lives inside the scene)
+  {
+    const soft = (hex) => {
+      const c = document.createElement('canvas');
+      c.width = c.height = 128;
+      const ctx = c.getContext('2d');
+      const col = new THREE.Color(hex);
+      const r = (a) => `rgba(${(col.r * 255) | 0},${(col.g * 255) | 0},${(col.b * 255) | 0},${a})`;
+      const g = ctx.createRadialGradient(64, 64, 0, 64, 64, 64);
+      g.addColorStop(0, r(0.55));
+      g.addColorStop(1, r(0));
+      ctx.fillStyle = g;
+      ctx.fillRect(0, 0, 128, 128);
+      const t = new THREE.CanvasTexture(c);
+      t.colorSpace = THREE.SRGBColorSpace;
+      return t;
+    };
+    const neb = (hex, x, y, z, s, op) => {
+      const sp = new THREE.Sprite(new THREE.SpriteMaterial({
+        map: soft(hex), transparent: true, opacity: op, depthWrite: false, blending: THREE.AdditiveBlending,
+      }));
+      sp.position.set(x, y, z);
+      sp.scale.setScalar(s);
+      sp.renderOrder = -1;
+      scene.add(sp);
+    };
+    neb(0xe49e22, 260, 130, -700, 1300, 0.14);
+    neb(0x5fa8e6, -320, -170, -800, 1150, 0.09);
+    neb(0xc53637, -60, 260, -900, 900, 0.05);
+  }
 
   const controls = new OrbitControls(camera, renderer.domElement);
   controls.enableDamping = true;
@@ -221,7 +262,7 @@ export function initObservatory() {
     const [a, b] = linkIdx[i];
     const ca = new THREE.Color(cats[nodes[a].cat].color);
     const cb = new THREE.Color(cats[nodes[b].cat].color);
-    const m = hot ? 0.85 : 0.12;
+    const m = hot ? 0.9 : 0.17;
     ca.multiplyScalar(m); cb.multiplyScalar(m);
     linkCol[i * 6] = ca.r; linkCol[i * 6 + 1] = ca.g; linkCol[i * 6 + 2] = ca.b;
     linkCol[i * 6 + 3] = cb.r; linkCol[i * 6 + 4] = cb.g; linkCol[i * 6 + 5] = cb.b;
@@ -392,8 +433,11 @@ export function initObservatory() {
   }
   function resize() {
     const w = stage.clientWidth, h = stage.clientHeight;
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    const pr = Math.min(window.devicePixelRatio || 1, 2);
+    renderer.setPixelRatio(pr);
     renderer.setSize(w, h, false);
+    composer.setPixelRatio(pr);
+    composer.setSize(w, h);
     camera.aspect = w / h;
     camera.updateProjectionMatrix();
     fitHome();
@@ -429,7 +473,7 @@ export function initObservatory() {
 
     controls.target.lerp(camTarget, 0.06);
     controls.update();
-    renderer.render(scene, camera);
+    composer.render();
 
     // project labels
     const w = stage.clientWidth, h = stage.clientHeight;
