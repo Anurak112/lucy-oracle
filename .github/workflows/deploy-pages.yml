@@ -23,7 +23,9 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 22
+          # 24 = same major as the machine that generates package-lock.json —
+          # npm 10 (node 22) rejects npm-11 lockfiles for optional wasm subtrees
+          node-version: 24
           cache: npm
       - name: Install dependencies
         run: npm ci
