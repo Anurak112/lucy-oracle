@@ -1,7 +1,10 @@
 /* ψ Studio Floor — the live ops screen, terminal-office look on the web. */
 
 .sf-screen {
-  margin-top: 30px;
+  container-type: inline-size;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
   border: 1px solid var(--line);
   border-radius: 16px;
   background:
@@ -14,6 +17,7 @@
 
 /* top bezel — title, live pill, counters, clock */
 .sf-bar {
+  flex: 0 0 auto;
   display: flex;
   align-items: center;
   gap: 14px;
@@ -61,6 +65,9 @@
 
 /* body: crew | (sessions / feed) */
 .sf-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
   display: grid;
   grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
 }
@@ -173,6 +180,7 @@
 .sf-fsess { color: var(--faint); opacity: 0.7; }
 
 .sf-note {
+  flex: 0 0 auto;
   font-family: var(--mono);
   font-size: 10px;
   letter-spacing: 0.06em;
@@ -195,9 +203,12 @@
   .sf-recdot, .sf-pill .sf-dot, .sf-live.is-live .sf-livedot { animation: none !important; }
 }
 
-@media (max-width: 820px) {
+/* stack by the panel's OWN width (works inside the mission-control split) */
+@container (max-width: 680px) {
   .sf-body { grid-template-columns: 1fr; }
   .sf-col.sf-left { border-right: 0; border-bottom: 1px solid var(--line-soft); }
+}
+@container (max-width: 440px) {
   .sf-row { grid-template-columns: minmax(84px, auto) 76px minmax(0, 1fr); }
   .sf-row .sf-when { display: none; }
   .sf-clock { display: none; }

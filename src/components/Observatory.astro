@@ -3,43 +3,62 @@
 import { nodes, links, CATS, counts } from '../data/brain';
 
 const payload = JSON.stringify({ nodes, links, cats: CATS });
+
+interface Props {
+  embedded?: boolean;
+}
+const { embedded = false } = Astro.props;
 ---
 
-<section class="obs reveal" aria-labelledby="obs-h">
-  <span class="scene-tab">ψ 01</span>
-  <p class="kicker">The Observatory · living knowledge graph</p>
-  <h2 id="obs-h">หอดูดาวแห่งสมอง</h2>
-  <p class="lead">
-    ดาวหนึ่งดวง = หนึ่งสิ่งที่ลูซี่สร้าง เรียนรู้ หรือเป็น —
-    <b>ทุกโปรเจกต์หนัง ทุกสกิล ทุกบทเรียน คือดาวจริงบนแผนที่นี้</b>.
-    ดาวยิ่งใหญ่ = งานยิ่งสำคัญ. ลาก&nbsp;=&nbsp;หมุน · เลื่อน&nbsp;=&nbsp;ซูม · แตะดาว&nbsp;=&nbsp;เปิดแฟ้ม.
-  </p>
-
-  <div class="obs-stage" id="obs-stage">
-    <canvas id="obs-canvas" aria-label="แผนที่ดาวความรู้ของลูซี่ — โต้ตอบได้"></canvas>
-    <div class="obs-labels" id="obs-labels" aria-hidden="true"></div>
-    <div class="obs-tip" id="obs-tip" aria-hidden="true"></div>
-
-    <div class="obs-hud mono" aria-hidden="true">
-      <span class="hud-dot"></span> ψ OBSERVATORY<span class="hud-more"> — {counts.nodes} STARS · {counts.links} THREADS</span>
+{
+  embedded ? (
+    <div class="obs-stage is-embedded" id="obs-stage">
+      <canvas id="obs-canvas" aria-label="แผนที่ดาวความรู้ของลูซี่ — โต้ตอบได้" />
+      <div class="obs-labels" id="obs-labels" aria-hidden="true" />
+      <div class="obs-tip" id="obs-tip" aria-hidden="true" />
+      <div class="obs-hud mono" aria-hidden="true">
+        <span class="hud-dot" /> ψ OBSERVATORY<span class="hud-more"> — {counts.nodes} STARS · {counts.links} THREADS</span>
+      </div>
+      <button class="obs-resetbtn mono" id="obs-reset" title="กลับมุมมองเริ่มต้น">⌖ RESET</button>
+      <div class="obs-chips" id="obs-chips" role="group" aria-label="กรองตามหมวด" />
+      <aside class="obs-panel" id="obs-panel" aria-live="polite" />
+      <p class="no-webgl-msg">เครื่องนี้เปิด WebGL ไม่ได้ — รายชื่อดาวทั้งหมดยังอยู่ในส่วนถัดไปของหน้า</p>
     </div>
-    <button class="obs-resetbtn mono" id="obs-reset" title="กลับมุมมองเริ่มต้น">⌖ RESET</button>
+  ) : (
+    <section class="obs reveal" aria-labelledby="obs-h">
+      <span class="scene-tab">ψ 01</span>
+      <p class="kicker">The Observatory · living knowledge graph</p>
+      <h2 id="obs-h">หอดูดาวแห่งสมอง</h2>
+      <p class="lead">
+        ดาวหนึ่งดวง = หนึ่งสิ่งที่ลูซี่สร้าง เรียนรู้ หรือเป็น —
+        <b>ทุกโปรเจกต์หนัง ทุกสกิล ทุกบทเรียน คือดาวจริงบนแผนที่นี้</b>. ดาวยิ่งใหญ่ = งานยิ่งสำคัญ.
+        ลาก&nbsp;=&nbsp;หมุน · เลื่อน&nbsp;=&nbsp;ซูม · แตะดาว&nbsp;=&nbsp;เปิดแฟ้ม.
+      </p>
 
-    <div class="obs-chips" id="obs-chips" role="group" aria-label="กรองตามหมวด"></div>
-    <aside class="obs-panel" id="obs-panel" aria-live="polite"></aside>
+      <div class="obs-stage" id="obs-stage">
+        <canvas id="obs-canvas" aria-label="แผนที่ดาวความรู้ของลูซี่ — โต้ตอบได้" />
+        <div class="obs-labels" id="obs-labels" aria-hidden="true" />
+        <div class="obs-tip" id="obs-tip" aria-hidden="true" />
+        <div class="obs-hud mono" aria-hidden="true">
+          <span class="hud-dot" /> ψ OBSERVATORY<span class="hud-more"> — {counts.nodes} STARS · {counts.links} THREADS</span>
+        </div>
+        <button class="obs-resetbtn mono" id="obs-reset" title="กลับมุมมองเริ่มต้น">⌖ RESET</button>
+        <div class="obs-chips" id="obs-chips" role="group" aria-label="กรองตามหมวด" />
+        <aside class="obs-panel" id="obs-panel" aria-live="polite" />
+        <p class="no-webgl-msg">เครื่องนี้เปิด WebGL ไม่ได้ — รายชื่อดาวทั้งหมดยังอยู่ในส่วนถัดไปของหน้า</p>
+      </div>
 
-    <p class="no-webgl-msg">เครื่องนี้เปิด WebGL ไม่ได้ — รายชื่อดาวทั้งหมดยังอยู่ในส่วนถัดไปของหน้า</p>
-  </div>
+      <p class="plate mono">
+        ψ ARCHIVE · <b>{counts.films} FILMS</b> · {counts.skills} SKILLS · {counts.knowledge} LESSONS · ทีม{" "}
+        {counts.crew} จิต · SNAPSHOT 10 JUL 2026
+      </p>
 
-  <p class="plate mono">
-    ψ ARCHIVE · <b>{counts.films} FILMS</b> · {counts.skills} SKILLS · {counts.knowledge} LESSONS ·
-    ทีม {counts.crew} จิต · SNAPSHOT 10 JUL 2026
-  </p>
-
-  <noscript>
-    <p class="lead" style="margin-top:14px">แผนที่ดาวต้องใช้ JavaScript — เนื้อหาเดียวกันอยู่ในส่วนล่างของหน้า</p>
-  </noscript>
-</section>
+      <noscript>
+        <p class="lead" style="margin-top:14px">แผนที่ดาวต้องใช้ JavaScript — เนื้อหาเดียวกันอยู่ในส่วนล่างของหน้า</p>
+      </noscript>
+    </section>
+  )
+}
 
 <script type="application/json" id="obs-data" set:html={payload} />
 
@@ -52,6 +71,7 @@ const payload = JSON.stringify({ nodes, links, cats: CATS });
 <style>
   /* full-bleed: the observatory breaks out of the column, edge to edge */
   .obs-stage {
+    --obs-edge: max(16px, calc(50vw - 640px));
     position: relative;
     width: 100vw;
     margin-left: calc(50% - 50vw);
@@ -62,6 +82,15 @@ const payload = JSON.stringify({ nodes, links, cats: CATS });
     overflow: hidden;
     background: #0d0a07;
     box-shadow: 0 30px 70px -40px rgba(0, 0, 0, 0.9);
+  }
+  /* embedded (mission-control split): fill the pane, controls hug the pane edge */
+  .obs-stage.is-embedded {
+    --obs-edge: 14px;
+    width: 100%;
+    margin: 0;
+    height: 100%;
+    border: 1px solid var(--line);
+    border-radius: 14px;
   }
   #obs-canvas {
     position: absolute;
@@ -115,7 +144,7 @@ const payload = JSON.stringify({ nodes, links, cats: CATS });
 
   .obs-hud {
     position: absolute;
-    top: 14px; left: max(16px, calc(50vw - 640px));
+    top: 14px; left: var(--obs-edge);
     font-size: 10px;
     letter-spacing: 0.22em;
     color: var(--muted);
@@ -139,7 +168,7 @@ const payload = JSON.stringify({ nodes, links, cats: CATS });
 
   .obs-resetbtn {
     position: absolute;
-    top: 12px; right: max(14px, calc(50vw - 640px));
+    top: 12px; right: var(--obs-edge);
     z-index: 3;
     background: rgba(13, 11, 9, 0.7);
     border: 1px solid var(--line);
@@ -155,7 +184,7 @@ const payload = JSON.stringify({ nodes, links, cats: CATS });
 
   .obs-chips {
     position: absolute;
-    left: max(14px, calc(50vw - 640px)); right: max(14px, calc(50vw - 640px)); bottom: 14px;
+    left: var(--obs-edge); right: var(--obs-edge); bottom: 14px;
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
@@ -183,7 +212,7 @@ const payload = JSON.stringify({ nodes, links, cats: CATS });
 
   .obs-panel {
     position: absolute;
-    top: 50px; right: max(14px, calc(50vw - 640px));
+    top: 50px; right: var(--obs-edge);
     width: min(330px, calc(100% - 28px));
     max-height: calc(100% - 120px);
     overflow: auto;

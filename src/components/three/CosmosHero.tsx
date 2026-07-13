@@ -105,7 +105,7 @@ function OracleOrb({ scrollP }: { scrollP: React.MutableRefObject<number> }) {
 
   useFrame(({ clock }) => {
     const t = clock.elapsedTime;
-    const fade = Math.max(0, 1 - scrollP.current * 1.15) * (mob ? 0.75 : 1);
+    const fade = Math.max(0, 1 - scrollP.current * 1.9) * (mob ? 0.75 : 1);
     group.current.visible = fade > 0.02;
     if (!group.current.visible) return;
     const k = 0.7 + fade * 0.3;
