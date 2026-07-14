@@ -24,19 +24,23 @@ const ANCHORS = {
 
 function makeStarTexture(hex) {
   const c = document.createElement('canvas');
-  c.width = c.height = 128;
+  c.width = c.height = 256;
   const ctx = c.getContext('2d');
   const col = new THREE.Color(hex);
   const r = (a) => `rgba(${(col.r * 255) | 0},${(col.g * 255) | 0},${(col.b * 255) | 0},${a})`;
-  const g = ctx.createRadialGradient(64, 64, 0, 64, 64, 64);
-  g.addColorStop(0, 'rgba(255,252,244,1)');
-  g.addColorStop(0.18, r(0.95));
-  g.addColorStop(0.42, r(0.34));
+  // crisp bright core (tight white centre) + defined colour halo that falls off fast
+  const g = ctx.createRadialGradient(128, 128, 0, 128, 128, 128);
+  g.addColorStop(0, 'rgba(255,255,255,1)');
+  g.addColorStop(0.05, 'rgba(255,255,252,1)');
+  g.addColorStop(0.12, r(0.98));
+  g.addColorStop(0.24, r(0.5));
+  g.addColorStop(0.46, r(0.12));
   g.addColorStop(1, r(0));
   ctx.fillStyle = g;
-  ctx.fillRect(0, 0, 128, 128);
+  ctx.fillRect(0, 0, 256, 256);
   const tex = new THREE.CanvasTexture(c);
   tex.colorSpace = THREE.SRGBColorSpace;
+  tex.anisotropy = 4;
   return tex;
 }
 
@@ -145,7 +149,8 @@ export function initObservatory() {
     return;
   }
   const scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x0d0a07);
+  scene.background = new THREE.Color(0x04050c); // deep space
+  scene.fog = new THREE.FogExp2(0x04050c, 0.0016); // distance haze for depth
   const camera = new THREE.PerspectiveCamera(55, 1, 1, 2500);
   const HOME = new THREE.Vector3(28, 16, 312);
   camera.position.copy(HOME);
@@ -153,7 +158,7 @@ export function initObservatory() {
   // bloom pipeline — real glow, the difference between "bright" and "burning"
   const composer = new EffectComposer(renderer);
   composer.addPass(new RenderPass(scene, camera));
-  const bloom = new UnrealBloomPass(new THREE.Vector2(1, 1), 0.9, 0.55, 0.18);
+  const bloom = new UnrealBloomPass(new THREE.Vector2(1, 1), 1.15, 0.72, 0.3);
   composer.addPass(bloom);
   composer.addPass(new OutputPass());
 
@@ -183,9 +188,11 @@ export function initObservatory() {
       sp.renderOrder = -1;
       scene.add(sp);
     };
-    neb(0xe49e22, 260, 130, -700, 1300, 0.14);
-    neb(0x5fa8e6, -320, -170, -800, 1150, 0.09);
-    neb(0xc53637, -60, 260, -900, 900, 0.05);
+    // cool deep-space nebula clouds + one faint gold accent (Lucy's identity)
+    neb(0x24408f, 300, 150, -820, 1560, 0.18);
+    neb(0x6a2f9c, -350, -180, -880, 1360, 0.15);
+    neb(0x146a72, -40, 300, -980, 1060, 0.1);
+    neb(0xe49e22, 220, -220, -720, 820, 0.05);
   }
 
   const controls = new OrbitControls(camera, renderer.domElement);
@@ -200,24 +207,35 @@ export function initObservatory() {
   const basePos = layout(nodes, linkIdx);
   const livePos = new Float32Array(basePos);
 
-  // background dust — depth without cost
+  // deep-space starfield — 1300 tiny stars, cool white with blue/gold flecks
   {
-    const D = 420;
+    const D = 1300;
     const dust = new Float32Array(D * 3);
+    const col = new Float32Array(D * 3);
+    const cWhite = new THREE.Color(0xffffff);
+    const cCool = new THREE.Color(0xbcd4ff);
+    const cWarm = new THREE.Color(0xffe9c2);
     for (let i = 0; i < D; i++) {
-      const r = 420 + Math.random() * 480;
+      const r = 360 + Math.random() * 900;
       const th = Math.random() * Math.PI * 2;
       const u = Math.random() * 2 - 1;
       const s = Math.sqrt(1 - u * u);
       dust[i * 3] = r * s * Math.cos(th);
       dust[i * 3 + 1] = r * u;
       dust[i * 3 + 2] = r * s * Math.sin(th);
+      const pick = Math.random();
+      const cc = pick < 0.62 ? cWhite : pick < 0.85 ? cCool : cWarm;
+      const b = 0.35 + Math.random() * 0.65;
+      col[i * 3] = cc.r * b;
+      col[i * 3 + 1] = cc.g * b;
+      col[i * 3 + 2] = cc.b * b;
     }
     const g = new THREE.BufferGeometry();
     g.setAttribute('position', new THREE.BufferAttribute(dust, 3));
+    g.setAttribute('color', new THREE.BufferAttribute(col, 3));
     const m = new THREE.PointsMaterial({
-      color: 0xc9a35e, size: 1.6, sizeAttenuation: true,
-      transparent: true, opacity: 0.32, depthWrite: false,
+      size: 1.6, sizeAttenuation: true, vertexColors: true, fog: false,
+      transparent: true, opacity: 0.85, depthWrite: false, blending: THREE.AdditiveBlending,
     });
     scene.add(new THREE.Points(g, m));
   }
@@ -462,7 +480,8 @@ export function initObservatory() {
       sprites[i].position.set(livePos[i * 3], livePos[i * 3 + 1], livePos[i * 3 + 2]);
       const ud = sprites[i].userData;
       ud.scale += ((ud.target || ud.base) - ud.scale) * 0.14;
-      sprites[i].scale.setScalar(ud.scale);
+      const tw = REDUCE ? 1 : 1 + 0.07 * Math.sin(t * 1.7 + i * 1.31);
+      sprites[i].scale.setScalar(ud.scale * tw);
     }
     for (let i = 0; i < linkIdx.length; i++) {
       const [a, b] = linkIdx[i];
