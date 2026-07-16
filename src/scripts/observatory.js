@@ -143,7 +143,9 @@ export function initObservatory() {
 
   let renderer;
   try {
-    renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance' });
+    // antialias:false is deliberate — see the composer below. With an EffectComposer the canvas
+    // never sees a triangle edge, so a multisampled canvas is pure waste.
+    renderer = new THREE.WebGLRenderer({ canvas, antialias: false, alpha: true, powerPreference: 'high-performance' });
   } catch {
     stage.classList.add('no-webgl');
     return;
@@ -156,7 +158,15 @@ export function initObservatory() {
   camera.position.copy(HOME);
 
   // bloom pipeline — real glow, the difference between "bright" and "burning"
-  const composer = new EffectComposer(renderer);
+  // AA has to live on the composer's buffers, not on the canvas: the last pass is a fullscreen
+  // quad, and a quad has no edges to antialias. A multisampled canvas would be resolved and
+  // thrown away every frame while the 126 link threads stayed jagged — paying for AA and not
+  // getting it. Handing the composer a multisampled target puts the samples where the geometry
+  // actually is. `samples` survives clone() and setSize(), and three clamps it to MAX_SAMPLES.
+  const composer = new EffectComposer(
+    renderer,
+    new THREE.WebGLRenderTarget(1, 1, { type: THREE.HalfFloatType, samples: 4 }), // sized by resize()
+  );
   composer.addPass(new RenderPass(scene, camera));
   const bloom = new UnrealBloomPass(new THREE.Vector2(1, 1), 1.15, 0.72, 0.3);
   composer.addPass(bloom);
