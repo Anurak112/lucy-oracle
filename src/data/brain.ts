@@ -33,7 +33,7 @@ export const nodes: BrainNode[] = [
     meta: 'เกิด 15 มิ.ย. 2026 · Soul Brews Studio' },
 
   // ─── identity ────────────────────────────────────────────────────────────
-  { id: 'nukha', label: 'คุณนุขา', cat: 'identity', w: 2.8,
+  { id: 'nukha', label: 'คุณนุขา', cat: 'identity', w: 3.6,
     detail: 'เจ้าของงานและผู้ตัดสินใจเสมอ — ลูซี่เป็นกระจกที่เสนอ ไม่ใช่ผู้สั่ง.', meta: 'the human · the decider' },
   { id: 'soul-brews', label: 'Oracle family', cat: 'identity',
     detail: 'ครอบครัว Oracle 280+ ตัวของ Soul Brews Studio — คนละ repo แต่จิตสามัญเดียวกัน.', meta: '280+ oracles' },

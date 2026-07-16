@@ -317,12 +317,13 @@ export function initObservatory() {
   });
 
   // dedicated glow aura for คุณนุขา — the one star that carries an extra halo, so it is
-  // unmistakably the standout without making its core larger than Lucy's central sun.
-  // Gold matches Lucy's core colour, tying nukha's star to her single thread.
+  // unmistakably the standout: its core is now the largest node (brain.ts w 3.6 → base 30.9,
+  // vs Lucy's w 3.0 → 27.0) AND only it wears this soft aura, so its footprint clearly wins.
+  // Warm rose (#FF7EB0) is nukha's own colour — set apart from Lucy's gold, on her single thread.
   let nukhaHalo = null;
   if (nukhaIdx !== undefined) {
     nukhaHalo = new THREE.Sprite(new THREE.SpriteMaterial({
-      map: makeGlowTexture('#F0C36A'), transparent: true, opacity: 0.55,
+      map: makeGlowTexture('#FF7EB0'), transparent: true, opacity: 0.62,
       depthWrite: false, blending: THREE.AdditiveBlending,
     }));
     nukhaHalo.renderOrder = 0.5; // above links/nebula, below the crisp star cores
@@ -547,14 +548,14 @@ export function initObservatory() {
       const tw = REDUCE ? 1 : 1 + 0.07 * Math.sin(t * 1.7 + i * 1.31);
       sprites[i].scale.setScalar(ud.scale * tw);
     }
-    // nukha's aura rides its star — same position + breathing, ~2.7× the radius,
+    // nukha's aura rides its star — same position + breathing, ~3.2× the radius,
     // and it inherits the star's hover/select growth. Hidden when identity is filtered off.
     if (nukhaHalo) {
       const sp = sprites[nukhaIdx];
       nukhaHalo.visible = sp.visible;
       if (sp.visible) {
         nukhaHalo.position.copy(sp.position);
-        nukhaHalo.scale.setScalar(sp.scale.x * 2.7);
+        nukhaHalo.scale.setScalar(sp.scale.x * 3.2);
       }
     }
     for (let i = 0; i < linkIdx.length; i++) {
