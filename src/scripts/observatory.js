@@ -44,6 +44,27 @@ function makeStarTexture(hex) {
   return tex;
 }
 
+// Soft glow aura (no hard core — the star sprite provides that). Used for the one
+// standout star, คุณนุขา, so its halo reads clearly bigger than any other node's.
+function makeGlowTexture(hex) {
+  const c = document.createElement('canvas');
+  c.width = c.height = 256;
+  const ctx = c.getContext('2d');
+  const col = new THREE.Color(hex);
+  const r = (a) => `rgba(${(col.r * 255) | 0},${(col.g * 255) | 0},${(col.b * 255) | 0},${a})`;
+  const g = ctx.createRadialGradient(128, 128, 0, 128, 128, 128);
+  g.addColorStop(0, r(0.85));
+  g.addColorStop(0.2, r(0.44));
+  g.addColorStop(0.5, r(0.14));
+  g.addColorStop(0.78, r(0.03));
+  g.addColorStop(1, r(0));
+  ctx.fillStyle = g;
+  ctx.fillRect(0, 0, 256, 256);
+  const tex = new THREE.CanvasTexture(c);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  return tex;
+}
+
 // Precomputed force layout — runs once at init, then the sky only breathes.
 function layout(nodes, linkIdx) {
   const N = nodes.length;
@@ -215,6 +236,20 @@ export function initObservatory() {
   controls.autoRotateSpeed = 0.5;
 
   const basePos = layout(nodes, linkIdx);
+
+  // ── คุณนุขา sits apart, near Lucy but clearly out of the identity huddle ──
+  // Creative direction (2026-07-16): nukha's node carries a single lucy↔nukha thread,
+  // so we pin it to its own pocket instead of letting the force layout bury it among the
+  // other identity stars. Coords are in final layout space (post-normalise); this spot is
+  // ~42u from the nearest node (clear pocket) and pulled forward (+z) so perspective lifts
+  // it toward the viewer. Measured: 76u from the nearest identity member vs ~28u before.
+  const nukhaIdx = idOf.get('nukha');
+  if (nukhaIdx !== undefined) {
+    basePos[nukhaIdx * 3] = -72;
+    basePos[nukhaIdx * 3 + 1] = 37;
+    basePos[nukhaIdx * 3 + 2] = 68;
+  }
+
   const livePos = new Float32Array(basePos);
 
   // deep-space starfield — 1300 tiny stars, cool white with blue/gold flecks
@@ -280,6 +315,19 @@ export function initObservatory() {
     scene.add(s);
     return s;
   });
+
+  // dedicated glow aura for คุณนุขา — the one star that carries an extra halo, so it is
+  // unmistakably the standout without making its core larger than Lucy's central sun.
+  // Gold matches Lucy's core colour, tying nukha's star to her single thread.
+  let nukhaHalo = null;
+  if (nukhaIdx !== undefined) {
+    nukhaHalo = new THREE.Sprite(new THREE.SpriteMaterial({
+      map: makeGlowTexture('#F0C36A'), transparent: true, opacity: 0.55,
+      depthWrite: false, blending: THREE.AdditiveBlending,
+    }));
+    nukhaHalo.renderOrder = 0.5; // above links/nebula, below the crisp star cores
+    scene.add(nukhaHalo);
+  }
 
   const catVisible = Object.fromEntries(Object.keys(cats).map((k) => [k, true]));
   let hover = -1;
@@ -498,6 +546,16 @@ export function initObservatory() {
       ud.scale += ((ud.target || ud.base) - ud.scale) * 0.14;
       const tw = REDUCE ? 1 : 1 + 0.07 * Math.sin(t * 1.7 + i * 1.31);
       sprites[i].scale.setScalar(ud.scale * tw);
+    }
+    // nukha's aura rides its star — same position + breathing, ~2.7× the radius,
+    // and it inherits the star's hover/select growth. Hidden when identity is filtered off.
+    if (nukhaHalo) {
+      const sp = sprites[nukhaIdx];
+      nukhaHalo.visible = sp.visible;
+      if (sp.visible) {
+        nukhaHalo.position.copy(sp.position);
+        nukhaHalo.scale.setScalar(sp.scale.x * 2.7);
+      }
     }
     for (let i = 0; i < linkIdx.length; i++) {
       const [a, b] = linkIdx[i];

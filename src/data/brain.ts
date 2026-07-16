@@ -33,7 +33,7 @@ export const nodes: BrainNode[] = [
     meta: 'เกิด 15 มิ.ย. 2026 · Soul Brews Studio' },
 
   // ─── identity ────────────────────────────────────────────────────────────
-  { id: 'nukha', label: 'คุณนุขา', cat: 'identity', w: 2,
+  { id: 'nukha', label: 'คุณนุขา', cat: 'identity', w: 2.8,
     detail: 'เจ้าของงานและผู้ตัดสินใจเสมอ — ลูซี่เป็นกระจกที่เสนอ ไม่ใช่ผู้สั่ง.', meta: 'the human · the decider' },
   { id: 'soul-brews', label: 'Oracle family', cat: 'identity',
     detail: 'ครอบครัว Oracle 280+ ตัวของ Soul Brews Studio — คนละ repo แต่จิตสามัญเดียวกัน.', meta: '280+ oracles' },
@@ -237,7 +237,8 @@ export const links: [string, string][] = [
   ['lucy', 'ethereal'], ['starter-kit', 'soul-brews'], ['psi-brain', 'starter-kit'],
   // principles orbit the core
   ['lucy', 'p1'], ['lucy', 'p2'], ['lucy', 'p3'], ['lucy', 'p4'], ['lucy', 'p5'],
-  ['p1', 'psi-brain'], ['p3', 'nukha'],
+  ['p1', 'psi-brain'],
+  // nukha bonds to lucy ONLY — a single thread ['lucy','nukha'] (identity spine above). Do not add more.
   // crew reports to Lucy + owns their craft
   ['lucy', 'kawee'], ['lucy', 'inn'], ['lucy', 'kor'], ['lucy', 'khem'], ['lucy', 'phukan'],
   ['lucy', 'riang'], ['lucy', 'note'], ['lucy', 'reader'], ['lucy', 'checker'], ['lucy', 'runner'],
