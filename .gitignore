@@ -14,3 +14,11 @@ pnpm-debug.log*
 .env.production
 # macOS / editor
 .DS_Store
+
+# --- Lucy's brain: never commit into this PUBLIC repo ---
+# ψ/  = junction to the PRIVATE lucy-vault repo (the live brain)
+# psi/ = frozen latin archive (203 untracked files must not leak)
+# The 2 soul files + starter-kit gitlink are already tracked → stay public
+# (gitignore never affects already-tracked paths)
+/ψ/
+/psi/
