@@ -413,10 +413,16 @@ export function initObservatory() {
   canvas.addEventListener('pointerdown', () => clearTimeout(idleTimer));
 
   // ── frame loop ─────────────────────────────────────────────────────────
-  let running = true;
-  const io = new IntersectionObserver(([en]) => { running = en.isIntersecting; }, { threshold: 0.02 });
+  // Two INDEPENDENT gates, deliberately not merged into one flag.
+  // A single `running` latch cannot survive a tab switch: visibilitychange only
+  // fires on CHANGE, and the IntersectionObserver does not re-fire on tab return
+  // (intersection never changed) — so nothing would ever set it back to true and
+  // the star map stayed dead until you scrolled it out of view and back.
+  let onScreen = true;
+  let tabVisible = !document.hidden;
+  const io = new IntersectionObserver(([en]) => { onScreen = en.isIntersecting; }, { threshold: 0.02 });
   io.observe(stage);
-  document.addEventListener('visibilitychange', () => { if (document.hidden) running = false; });
+  document.addEventListener('visibilitychange', () => { tabVisible = !document.hidden; });
 
   // pull the camera back on narrow stages so the whole galaxy fits the frame
   let fitDone = false;
@@ -450,7 +456,7 @@ export function initObservatory() {
 
   function frame(now) {
     requestAnimationFrame(frame);
-    if (!running) return;
+    if (!onScreen || !tabVisible) return;
     const t = (now - t0) / 1000;
 
     // breathe — gentle per-star float

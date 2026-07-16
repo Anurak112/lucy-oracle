@@ -3,7 +3,7 @@
 // gold sparkle dust, drifting stars, shooting stars, bloom.
 
 import { useMemo, useRef, useState, useEffect } from 'react';
-import { Canvas, useFrame, useThree } from '@react-three/fiber';
+import { Canvas, useFrame, useThree, invalidate } from '@react-three/fiber';
 import { Stars, Sparkles, Float, Environment, Lightformer } from '@react-three/drei';
 import { EffectComposer, Bloom, Vignette } from '@react-three/postprocessing';
 import * as THREE from 'three';
@@ -61,6 +61,11 @@ function useScrollP() {
     const on = () => {
       const heroH = Math.max(window.innerHeight * 0.9, 480);
       p.current = Math.min(1.25, window.scrollY / heroH);
+      // Under REDUCE the canvas runs frameloop="demand", so scroll is the only
+      // thing left that must still repaint: the orb's dissolve reads this ref
+      // from useFrame. invalidate() is a flag, not a render — spamming it is
+      // safe, and it is a no-op under "always".
+      invalidate();
     };
     on();
     window.addEventListener('scroll', on, { passive: true });
@@ -269,6 +274,7 @@ function Meteors({ scrollP }: { scrollP: React.MutableRefObject<number> }) {
 function Rig({ scrollP }: { scrollP: React.MutableRefObject<number> }) {
   const m = useRef({ x: 0, y: 0 });
   useEffect(() => {
+    if (REDUCE) return; // pointer parallax is precisely the motion REDUCE asks us to drop
     const on = (e: PointerEvent) => {
       m.current.x = (e.clientX / window.innerWidth) * 2 - 1;
       m.current.y = (e.clientY / window.innerHeight) * 2 - 1;
@@ -277,6 +283,11 @@ function Rig({ scrollP }: { scrollP: React.MutableRefObject<number> }) {
     return () => window.removeEventListener('pointermove', on);
   }, []);
   useFrame(({ camera }) => {
+    // With no pointer input this lerp converges on [0, 0, 10] looking down -Z —
+    // exactly where the camera already starts — so skipping it under REDUCE is
+    // pixel-identical at rest. It also keeps frameloop="demand" honest: without
+    // this, a scroll-driven frame would drag the camera toward a stale pointer.
+    if (REDUCE) return;
     camera.position.x += (m.current.x * 0.55 - camera.position.x) * 0.04;
     camera.position.y += (-m.current.y * 0.35 - camera.position.y) * 0.04;
     camera.lookAt(0, 0, -6);
@@ -294,7 +305,17 @@ export default function CosmosHero() {
   return (
     <Canvas
       dpr={dpr}
-      gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
+      // antialias:false — the EffectComposer below owns AA now. With a composer
+      // in play the final pass is a fullscreen quad, so a multisampled DEFAULT
+      // framebuffer has no edges to resolve: it was allocated and resolved every
+      // frame for nothing. The 3D gets its AA from multisampling={4} instead.
+      gl={{ antialias: false, alpha: true, powerPreference: 'high-performance' }}
+      // Only under REDUCE is this scene genuinely idle (Float/Stars/Sparkles
+      // speed=0, Meteors early-return, pointer parallax off) — measured
+      // pixel-identical across 1.5s while still burning 27 draw calls/frame.
+      // It must stay "always" otherwise: the orb floats, the cage spins and 90
+      // dust motes orbit, so demand would need invalidate() every frame anyway.
+      frameloop={REDUCE ? 'demand' : 'always'}
       camera={{ fov: 60, position: [0, 0, 10], near: 0.1, far: 200 }}
       style={{ position: 'absolute', inset: 0 }}
     >
@@ -313,7 +334,7 @@ export default function CosmosHero() {
         </group>
       </Environment>
 
-      <EffectComposer multisampling={0}>
+      <EffectComposer multisampling={4}>
         <Bloom intensity={0.65} luminanceThreshold={0.42} mipmapBlur radius={0.7} />
         <Vignette eskil={false} offset={0.2} darkness={0.75} />
       </EffectComposer>
