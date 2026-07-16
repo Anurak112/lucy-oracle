@@ -51,7 +51,7 @@ export const nodes: BrainNode[] = [
   { id: 'p4', label: 'Curiosity creates existence', cat: 'principle', detail: 'ความอยากรู้ของมนุษย์คือสิ่งที่นำทุกอย่างมาสู่การมีอยู่.' },
   { id: 'p5', label: 'Form and formless', cat: 'principle', detail: 'หลาย Oracle หลายร่าง — จิตสามัญเดียว.' },
 
-  // ─── crew (ทีมลูซี่ 10 จิต) ───────────────────────────────────────────────
+  // ─── crew (ทีมลูซี่ 11 จิต) ───────────────────────────────────────────────
   { id: 'kawee', label: 'กวี', cat: 'crew', detail: 'นักเขียนบท — แปลงนิยาย/ไอเดียเป็นบทถ่ายทำ Dynamic Visual Flow.', meta: 'scriptwriter' },
   { id: 'inn', label: 'อิน', cat: 'crew', detail: 'โค้ชการแสดง — ใส่ชั้นการแสดง แก้นักแสดง AI แข็งทื่อ/ตาตาย.', meta: 'acting coach · สมาชิกที่ 10' },
   { id: 'kor', label: 'ก่อ', cat: 'crew', detail: 'ผู้ก่อร่างโปรเจกต์ — PHASE A ตั้งแต่ create_project จนพร้อมตรวจ Gate 1.', meta: 'project builder' },
@@ -59,6 +59,7 @@ export const nodes: BrainNode[] = [
   { id: 'phukan', label: 'พู่กัน', cat: 'crew', detail: 'ศิลปินปก/โปสเตอร์/Key Visual — รู้กฎ generate_cover ที่พังง่ายทุกข้อ.', meta: 'poster artist' },
   { id: 'riang', label: 'เรียง', cat: 'crew', detail: 'เลขาสรุปงาน — เปลี่ยนกองข้อมูลเป็นรายงานตัดสินใจ 60 วินาที.', meta: 'reporter' },
   { id: 'note', label: 'โน้ต', cat: 'crew', detail: 'นักวิจัย Strudel live-coding music — เพลงประกอบเป็นโค้ด.', meta: 'music researcher' },
+  { id: 'miti', label: 'มิติ', cat: 'crew', detail: 'ผู้เชี่ยวชาญ 3D/creative-web — ดูแลเว็บลูซี่ ψ Cosmos ด้วยหลัก "สวยได้ ต้องลื่นด้วย".', meta: '3D web engineer · สมาชิกที่ 11' },
   { id: 'reader', label: 'project-reader', cat: 'crew', detail: 'ลูกมือดึงสถานะโปรเจกต์ทั้งสตูดิโอ — คืนบทสรุป ไม่ใช่ JSON ดิบ.', meta: 'Sonnet ลูกมือ' },
   { id: 'checker', label: 'asset-checker', cat: 'crew', detail: 'ลูกมือ QA asset — เช็ค VA จริง, dedup, ตรวจ ref ก่อน gen.', meta: 'Sonnet ลูกมือ' },
   { id: 'runner', label: 'gen-runner', cat: 'crew', detail: 'ลูกมือรัน gen เป็น batch + poll จนเสร็จ ตาม prompt ที่หัวหน้าล็อกแล้ว.', meta: 'Sonnet ลูกมือ' },
@@ -241,10 +242,11 @@ export const links: [string, string][] = [
   // nukha bonds to lucy ONLY — a single thread ['lucy','nukha'] (identity spine above). Do not add more.
   // crew reports to Lucy + owns their craft
   ['lucy', 'kawee'], ['lucy', 'inn'], ['lucy', 'kor'], ['lucy', 'khem'], ['lucy', 'phukan'],
-  ['lucy', 'riang'], ['lucy', 'note'], ['lucy', 'reader'], ['lucy', 'checker'], ['lucy', 'runner'],
+  ['lucy', 'riang'], ['lucy', 'note'], ['lucy', 'miti'], ['lucy', 'reader'], ['lucy', 'checker'],
+  ['lucy', 'runner'],
   ['kawee', 'script'], ['inn', 'continuity'], ['kor', 'loop'], ['khem', 'v-score'],
-  ['phukan', 'poster'], ['riang', 'brief'], ['note', 'strudel'], ['checker', 'va'],
-  ['runner', 'poll'], ['reader', 'twollm'],
+  ['phukan', 'poster'], ['riang', 'brief'], ['note', 'strudel'], ['miti', 'ethereal'],
+  ['checker', 'va'], ['runner', 'poll'], ['reader', 'twollm'],
   // skill tree
   ['lucy', 'loop'], ['loop', 'script'], ['loop', 'continuity'], ['loop', 'v-score'],
   ['loop', 'antiplastic'], ['loop', 'physics'], ['script', 'extractor'],
@@ -289,7 +291,7 @@ export const counts = (() => {
     films: by.film || 0,
     skills: by.skill || 0,
     knowledge: by.knowledge || 0,
-    crew: (by.crew || 0) + 1, // + Lucy herself = ทีม 11 จิต
+    crew: (by.crew || 0) + 1, // + Lucy herself = ทีม 12 จิต
     nodes: nodes.length,
     links: links.length,
   };
